@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof spike</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 14px/1.4 system-ui, sans-serif; margin: 0; padding: 12px; width: 460px; background: Canvas; color: CanvasText; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  button { font: inherit; min-height: 44px; min-width: 44px; padding: 6px 10px; margin: 3px 0; width: 100%; text-align: left; }
+  button:focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
+  .row { display: flex; gap: 6px; }
+  .row button { width: auto; flex: 1; }
+  .hint { color: GrayText; font-size: 12px; margin: 4px 0 8px; }
+  #status { min-height: 1.4em; font-weight: 600; margin: 6px 0; }
+  pre { background: Field; color: FieldText; border: 1px solid GrayText; padding: 8px; max-height: 320px; overflow: auto; font-size: 11px; white-space: pre-wrap; word-break: break-word; }
+</style>
+</head>
+<body>
+  <h1>Strobeproof M0 spike</h1>
+  <p class="hint">Open the page you want to test in the active tab first. Then press a button here.</p>
+
+  <button id="probe">Probe this tab: tests 1, 2, 3, 5 (state)</button>
+  <button id="calm">Run Calm measurement: test 4 (opens a test tab)</button>
+  <div class="row">
+    <button id="applyCalm">Apply Calm to first video</button>
+    <button id="removeCalm">Remove Calm</button>
+  </div>
+
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <div class="row">
+    <button id="copy">Copy results</button>
+    <button id="clear">Clear results</button>
+  </div>
+  <pre id="out">(no results yet)</pre>
+
+  <script src="spike.js"></script>
+</body>
+</html>

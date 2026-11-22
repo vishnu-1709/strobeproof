@@ -6,7 +6,7 @@ Hackathon: EvoHacks 2.0 (10 h, solo). Deadline: `<<YYYY-MM-DD HH:MM>>` (Asia/Kol
 
 | M | Name | Status | Time used | Tag |
 |---|---|---|---|---|
-| M0 | Spike kit | not started | — | — |
+| M0 | Spike kit | kit built; waiting on you to run it and paste results (C4) | — | — |
 | M1 | Spec lock | not started | — | — |
 | M2 | Core engine | not started | — | — |
 | M3 | Lab | not started | — | — |
