@@ -52,5 +52,27 @@ WCAG 2.3.1 is a published numeric safety spec. A pass/fail safety check should b
 ## 10. Limitations
 See the README Limitations section (canvas, CSS animation, CSS backgrounds, stripes; live latency; exact-3 Hz live over-caution; DRM/cross-origin can't be read; HDR; reference viewing conditions; never tested with people who have epilepsy).
 
-## 11. What I wrote vs what Claude Code wrote
-From AI_LOG.md. Mine: the spec interpretation (constants, transition definition, pre-trip design, Calm Mode math), the review of the expected answers (including case 9b), the red-rule decision, the spike plan and findings, the benchmark method. Written by Claude Code on my explicit delegation and annotated by me line by line: `flashCounter.js`, `areaGrid.js`. Claude Code wrote the rest of the code and tests.
+## 11. Built with AI assistance
+
+Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding assistant). In line with the EvoHacks 2.0 rule ("AI is accepted but you should not use it to create the whole project"), here is the split. The full per-commit record is in [AI_LOG.md](AI_LOG.md), which matches this section.
+
+**What I did**
+- Interpreted the spec: the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, Calm Mode and its 0.32 → 0.084 maths, and the protection model.
+- Defined the known-answer cases and their answers (`expected.json`). I reviewed the drafted file, added case 9b, chose linear RGB for the red rule, and approved and locked it.
+- Wrote `core/flashCounter.js` and `core/areaGrid.js` by hand. Earlier AI drafts of these two files are in the git history and were replaced.
+- Designed and ran the spike's manual real-Chrome checks.
+- Designed the benchmark method and recorded the competitor tools.
+- Did the manual accessibility testing: screen reader, 200% zoom, forced colours, hallway test.
+- Made the demo video.
+- Made or approved every decision in PROGRESS.md.
+
+**What Claude Code did**
+- Scaffolding.
+- The Lab UI.
+- The extension plumbing: service worker, content script, offscreen pre-scan, chips, popup, welcome tab.
+- The engine plumbing around my two files: luminance tiles, analyser, every-frame decoders.
+- The test harness: Vitest, synthetic frame generators, Playwright E2E, axe, latency and benchmark automation.
+- The build and clip scripts.
+- Drafts of the README and this page.
+
+Commits don't carry AI co-author trailers; AI use is disclosed here and in AI_LOG.md instead.
