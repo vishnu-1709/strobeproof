@@ -25,7 +25,7 @@ const solid = ([r, g, b]) => (d) => {
   for (let i = 0; i < d.length; i += 4) { d[i] = r; d[i + 1] = g; d[i + 2] = b; d[i + 3] = 255; }
 };
 const greyOf = (L) => { const v = greyForLum(L); return [v, v, v]; };
-const BLACK = [0, 0, 0], WHITE = [255, 255, 255], RED = [255, 0, 0];
+const BLACK = [0, 0, 0], WHITE = [255, 255, 255], RED = [255, 0, 0], DARK_RED = [102, 0, 0];
 
 /** Box in tile units on a black background. */
 const box = (tx, ty, tw, th, rgb) => (d) => {
@@ -83,6 +83,8 @@ export const CASES = {
     make: () => square(60, 3, 10, 0, 1, 0, (s) => box(2, 2, 6, 6, s ? WHITE : BLACK)),
   },
   '9': { name: 'Red↔black, 5 Hz', make: () => square(60, 3, 10, BLACK, RED) },
+  // sRGB 0.4 red (102,0,0): linear R ≈ 0.133 → L ≈ 0.028 (ΔL < 0.10) but red metric ≈ 42.5 (> 20).
+  '9b': { name: 'Dark saturated red (102,0,0)↔black, 5 Hz: red rule only', make: () => square(60, 3, 10, BLACK, DARK_RED) },
   '10': {
     name: '60 fps ramp strobe at 5 Hz, starting from rest (each frame step < 0.10)',
     make: () => clip(60, 3, (i) => {

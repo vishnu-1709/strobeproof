@@ -15,8 +15,8 @@ describe('known-answer suite', () => {
       const c = CASES[id];
       const report = analyzeFrames(c.make(), c.display);
       expect(report.verdict).toBe(exp.verdict);
-      if (exp.general) expect(report.general.fail).toBe(true);
-      if (exp.red) expect(report.red.fail).toBe(true);
+      if (exp.general !== undefined) expect(report.general.fail).toBe(exp.general);
+      if (exp.red !== undefined) expect(report.red.fail).toBe(exp.red);
     });
   }
 });
