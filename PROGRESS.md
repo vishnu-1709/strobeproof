@@ -53,9 +53,9 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | PRETRIP_TRANS 4 → 5 (human decision) | So compliant 2 Hz video (4 transitions/s) plays at normal brightness; 2.5 Hz (5/s) is calmed. Slack drops from 3 to 2 transitions, justified by the re-measured latency: Calm set −10.4 … +7.3 ms around the triggering frame (12 runs), paints within ~1 display frame, so at most 5 transitions (2.5 flashes) show. E2E: 2 Hz released, 2.5 Hz calmed. |
 | 2026-11-22 | History rewrite (human decision) | git filter-repo: both personal emails → GitHub noreply, attribution trailers stripped, dates verified identical for all 18 commits; force-pushed once; repo public; Pages on main. Backup bundle kept outside the repo. |
 | 2026-11-22 | flashCounter.js / areaGrid.js authorship (human decision) | Keep the AI-drafted versions (restored unchanged from 490f4a9 after a brief stub). Credited everywhere as "AI-drafted by Claude Code; reviewed and approved by me"; no handwritten claims. |
+| 2026-11-22 | PRETRIP_TRANS after the loaded-latency result (human decision) | Keep 5. Under heavy load the worst run let 6 transitions through (3 flashes, at the limit, not over); idle machines switch within ~1 frame. Reported in README and Devpost. |
 
 ## Open issues
-- **Decision for the human:** with PRETRIP_TRANS = 5, the latency under heavy load reached 155 ms (1 of 12 runs), so 6 transitions (3 flashes, at the limit) reached the screen. Keep 5 (2 Hz plays normally) or go back to 4 (2 Hz held calm, 1 more transition of slack)?
 - Intermittent under full-suite load: the "30 static WebPs within 300 ms" test failed once (one image not released in the window); passes 3/3 in isolation (max 0 ms). Not changed.
 - Not changed (no new behaviour without the human): an "uncertain" frame-skip pre-trip during warm-up restarts the 3 s quiet period, so very short clips can end before release on a busy machine. Safe-side. Option: let only pre-trip transitions (not skips) restart the quiet period.
 - Hackathon deadline and AI-use rule not yet provided.
