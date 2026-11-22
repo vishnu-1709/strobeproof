@@ -20,7 +20,7 @@
 **Spec and tests**
 - All thresholds live in `core/constants.js`. Never hard-code a threshold anywhere else.
 - **Never edit `core/__tests__/expected.json`**, and never skip, weaken or delete a test to make it pass. If a test fails and you believe the expectation is wrong, that is a conflict: stop and ask.
-- `core/flashCounter.js` and `core/areaGrid.js` are **the human's**. Don't write their logic unless explicitly told "write flashCounter" / "write areaGrid" for that session. Tests, interfaces and stubs that throw `NotImplemented` are fine.
+- `core/flashCounter.js` and `core/areaGrid.js` are AI-drafted by Claude Code and reviewed and approved by the owner. Don't change their logic without the owner's explicit approval for that change.
 - Analysis must decode **every frame** (WebCodecs `VideoDecoder` / `ImageDecoder`). Never sample by seeking at a fixed step.
 
 **Safety while building**
@@ -47,7 +47,7 @@
 - Never commit secrets, `.env`, `node_modules`, large binaries (> 5 MB) or failing-clip recordings. Generated clips are gitignored and regenerated with `tools/make-clips.mjs`.
 - **Never** force-push, rewrite pushed history, delete branches or tags, or change repo visibility without asking.
 - Do not add Co-Authored-By or Claude attribution lines to commits or PRs. (AI use is disclosed in AI_LOG.md and on Devpost instead.)
-- Never edit `core/flashCounter.js` or `core/areaGrid.js` again: the human writes them by hand (EvoHacks AI rule).
+- AI use must be credited accurately (EvoHacks rule): never describe AI-drafted code as handwritten. AI_LOG.md and DEVPOST.md must agree.
 - Tag each finished milestone: `git tag m#-done && git push --tags`.
 
 **Reporting**

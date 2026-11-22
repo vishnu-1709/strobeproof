@@ -40,7 +40,7 @@ Constants with the W3C link; the transition rule (≥ 0.10 change, darker side <
 ## 7. Proof
 - Suite: 20/20 cases match. Mutation-checked: the A8 bug breaks only #11, and the A9 bug breaks only the 3 Hz boundaries.
 - Every case encoded with ffmpeg → MP4 → WebCodecs gives the same answer.
-- Pre-trip latency: pre-trip at the 5th transition; Calm Mode set 10.8 ms before to 5.6 ms after that frame was due on screen (12 runs; worst ever seen 7.3 ms after). At most about one display frame of it shows: 2.5 flashes, under the limit.
+- Pre-trip latency: pre-trip at the 5th transition. Idle machine: Calm Mode set within about one display frame (−11 to +7 ms around that frame). Under heavy load, the worst of 12 runs was 155 ms late: the 6th transition showed, which is 3 flashes, at the limit but not over it.
 - Benchmark: Strobeproof blocked all 7 failing benchmark cases, with 0 frames at normal brightness (case 14 can't be a constant-rate file, so it's suite-only). Competitor rows: (fill in after recording, with versions and date).
 
 ## 8. Accessibility of the tool itself
@@ -57,22 +57,20 @@ See the README Limitations section (canvas, CSS animation, CSS backgrounds, stri
 Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding assistant). In line with the EvoHacks 2.0 rule ("AI is accepted but you should not use it to create the whole project"), here is the split. The full per-commit record is in [AI_LOG.md](AI_LOG.md), which matches this section.
 
 **What I did**
-- Interpreted the spec: the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, Calm Mode and its 0.32 → 0.084 maths, and the protection model.
-- Defined the known-answer cases and their answers (`expected.json`). I reviewed the drafted file, added case 9b, chose linear RGB for the red rule, and approved and locked it.
-- Wrote `core/flashCounter.js` and `core/areaGrid.js` by hand. Earlier AI drafts of these two files are in the git history and were replaced.
-- Designed and ran the spike's manual real-Chrome checks.
-- Designed the benchmark method and recorded the competitor tools.
-- Did the manual accessibility testing: screen reader, 200% zoom, forced colours, hallway test.
-- Made the demo video.
-- Made or approved every decision in PROGRESS.md.
+- **Chose the idea and the approach.** A flash detector you can verify: a known-answer suite, a benchmark of existing tools, and Calm Mode by default. I wrote the build plan.
+- **Made every spec and design decision** (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition rule, the pre-trip design (including moving it from 4 to 5 transitions), Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
+- **Wrote and approved the test answers** (`expected.json`), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red-only rule.
+- **Ran the real-browser checks, the spike and the benchmark**: the spike on Reddit/X in real Chrome, the release check in Chrome, and the competitor recordings. ⚠ confirm each is done before submitting.
+- **Made the video.** ⚠
 
-**What Claude Code did**
-- Scaffolding.
+**What Claude Code did: the implementation**
+- The detection engine, including `core/flashCounter.js` and `core/areaGrid.js`. These two were AI-drafted by Claude Code from my pseudocode, then reviewed and approved by me.
+- Luminance tiles, the analyser, and the every-frame GIF/WebP/MP4 decoders.
 - The Lab UI.
-- The extension plumbing: service worker, content script, offscreen pre-scan, chips, popup, welcome tab.
-- The engine plumbing around my two files: luminance tiles, analyser, every-frame decoders.
-- The test harness: Vitest, synthetic frame generators, Playwright E2E, axe, latency and benchmark automation.
-- The build and clip scripts.
+- The browser extension: service worker, content script, offscreen pre-scan, chips, popup, welcome tab.
+- The test harness from my cases and answers: Vitest, synthetic frame generators, Playwright E2E, axe, latency and benchmark automation.
+- The spike kit and its automated probes.
+- The build and clip scripts, and scaffolding.
 - Drafts of the README and this page.
 
 Commits don't carry AI co-author trailers; AI use is disclosed here and in AI_LOG.md instead.

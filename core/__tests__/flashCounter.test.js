@@ -1,4 +1,4 @@
-// Unit tests for the human-owned flashCounter.js and areaGrid.js (plan §4.3, §4.4).
+// Unit tests for flashCounter.js and areaGrid.js (plan §4.3, §4.4). AI-drafted by Claude Code; reviewed and approved by the project owner.
 import { describe, it, expect } from 'vitest';
 import { createFlashCounter } from '../flashCounter.js';
 import { areaVerdict } from '../areaGrid.js';
