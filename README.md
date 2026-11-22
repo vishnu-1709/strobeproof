@@ -13,7 +13,7 @@
 
 ## Install (Chrome, Edge, Brave)
 
-1. Download `strobeproof-extension-v1.0.0.zip` from the latest release and unzip it.
+1. Download [`strobeproof-extension-v1.0.0.zip`](https://github.com/vishnu-1709/strobeproof/releases/latest/download/strobeproof-extension-v1.0.0.zip) from the [latest release](https://github.com/vishnu-1709/strobeproof/releases/latest), then right-click it and choose **Extract All…**.
 2. Open `chrome://extensions` (or `edge://extensions`) and turn on **Developer mode**.
 3. Click **Load unpacked** and pick the unzipped folder. A one-screen welcome tab opens.
 
