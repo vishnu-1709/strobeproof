@@ -40,7 +40,7 @@ Constants with the W3C link; the transition rule (≥ 0.10 change, darker side <
 ## 7. Proof
 - Suite: 20/20 cases match. Mutation-checked: the A8 bug breaks only #11, and the A9 bug breaks only the 3 Hz boundaries.
 - Every case encoded with ffmpeg → MP4 → WebCodecs gives the same answer.
-- Pre-trip latency: Calm Mode set 9–14 ms *before* the 4th transition's frame was due on screen (10 runs). At most about one display frame of it shows: 2 flashes, under the limit.
+- Pre-trip latency: pre-trip at the 5th transition; Calm Mode set within 10.4 ms before to 7.3 ms after that frame was due on screen (12 runs). At most about one display frame of it shows: 2.5 flashes, under the limit.
 - Benchmark: Strobeproof blocked all 9 failing cases, with 0 frames at normal brightness. Competitor rows: (fill in after recording, with versions and date).
 
 ## 8. Accessibility of the tool itself

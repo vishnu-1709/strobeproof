@@ -50,9 +50,10 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | C8: make public + Pages | Approved by the human, then held by Claude: commit history contains two personal email addresses that would become public. Asked how to proceed. |
 | 2026-11-22 | C9: large bench clips | Keep the 640 px size behind ?allowLarge=1; the human opens it when recording. |
 | 2026-11-22 | Review fix (C6) | Chips moved next to their media in the DOM so they follow it in Tab order (was: end of body). Transformed ancestors corrected for. |
+| 2026-11-22 | PRETRIP_TRANS 4 → 5 (human decision) | So compliant 2 Hz video (4 transitions/s) plays at normal brightness; 2.5 Hz (5/s) is calmed. Slack drops from 3 to 2 transitions, justified by the re-measured latency: Calm set −10.4 … +7.3 ms around the triggering frame (12 runs), paints within ~1 display frame, so at most 5 transitions (2.5 flashes) show. E2E: 2 Hz released, 2.5 Hz calmed. |
+| 2026-11-22 | History rewrite (human decision) | git filter-repo: both personal emails → GitHub noreply, attribution trailers stripped, dates verified identical for all 18 commits; force-pushed once; repo public; Pages on main. Backup bundle kept outside the repo. |
 
 ## Open issues
-- Public repo + GitHub Pages: waiting on the email-in-history decision.
 - Hackathon deadline and AI-use rule not yet provided.
 - C4: Reddit/X GIF-video fetchability + Reddit shadow DOM need the human's real-Chrome spike run (SPIKE.md).
 - Human-only: NVDA/VoiceOver, 200% zoom, forced colours, hallway test; competitor benchmark recordings; install GIF (docs/install.gif); demo video; Devpost ⚠ facts.
@@ -61,7 +62,7 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 - [ ] Final check that "Strobeproof" is still unused on Devpost / Web Store / GitHub
 - [ ] Every ⚠ fact sourced or removed (DEVPOST.md)
 - [x] CALM_BRIGHTNESS set from the spike measurement; test #15 green
-- [ ] Lab URL works in incognito; suite page all green (needs public Pages)
+- [x] Lab URL works in a clean profile; suite page 20/20 (Chrome 156, built-in browser)
 - [x] Release ZIP installs on a clean profile (27/27 extension E2E on the unzipped ZIP)
 - [x] Pre-trip latency number and benchmark method in README
 - [ ] Video ≤ 3:00, warning card first, no unmasked flashing, own-code segment

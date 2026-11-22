@@ -20,8 +20,15 @@ export const RED_DELTA = 20;
 export const RED_SCALE = 320;
 /** ≥ 7 transitions in a half-open (t−1 s, t] window means more than 3 flashes (plan A9). */
 export const FAIL_TRANSITIONS = 7;
-/** Extension only: switch to Calm Mode at this many transitions (2 flashes, still compliant) (plan A17). */
-export const PRETRIP_TRANS = 4;
+/**
+ * Extension only: switch to Calm Mode at this many transitions in (t−1 s, t] (plan A17).
+ * Was 4 (3 transitions of slack below FAIL_TRANSITIONS). Raised to 5 (human decision, 2026-11-22) so a
+ * compliant 2 Hz flash (4 transitions/s) plays at normal brightness. 2 transitions of slack is enough:
+ * measured in E2E (e2e/latency.json, 12 runs), Calm is set between 10.4 ms before and 7.3 ms after the
+ * triggering frame is due on screen, and paints on the next rendering update — within about one display
+ * frame — so at most the 5th transition shows: 2.5 flashes, under 3.
+ */
+export const PRETRIP_TRANS = 5;
 /** Comfort mode (extension only, NOT a medical standard). */
 export const COMFORT_PRETRIP_TRANS = 2;
 export const COMFORT_FAIL_TRANSITIONS = 5;

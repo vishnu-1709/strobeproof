@@ -54,6 +54,9 @@ const awebp = ['-c:v', 'libwebp_anim', '-lossless', '1', '-loop', '0'];
 
 encode('flash-5hz.mp4', 30, squareFrames(30, 3, 10, BLACK, WHITE), mp4);
 encode('safe-2hz.mp4', 30, squareFrames(30, 3, 4, BLACK, WHITE), mp4);
+// Pre-trip boundary (PRETRIP_TRANS = 5): 2 Hz = 4 transitions/s → released; 2.5 Hz = 5/s → calmed. 6 s each.
+encode('flash-2hz-6s.mp4', 30, squareFrames(30, 6, 4, BLACK, WHITE), mp4);
+encode('flash-2p5hz-6s.mp4', 30, squareFrames(30, 6, 5, BLACK, WHITE), mp4);
 encode('red-5hz.mp4', 30, squareFrames(30, 3, 10, BLACK, RED), mp4);
 encode('flash-5hz.webm', 30, squareFrames(30, 3, 10, BLACK, WHITE), webm);
 encode('flash-5hz.gif', 20, squareFrames(20, 2, 10, BLACK, WHITE), gif);

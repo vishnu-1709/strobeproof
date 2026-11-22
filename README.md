@@ -27,7 +27,7 @@ Chromium only. Firefox isn't supported.
 
 - **Unchecked = Calm.** Every GIF, animated WebP and playing video starts in **Calm Mode** (`grayscale(1) brightness(0.32)`) until it's checked. Calm Mode can't flash, even on video Strobeproof can't read (DRM, cross-origin).
 - **Checked before you see it.** GIFs, animated WebPs and short muted looping "GIF-style" videos are decoded frame by frame in the background and released only if they pass. Static WebPs are released from their first 32 bytes.
-- **Watched while it plays.** Normal videos are calm for their first 2 seconds, then released and watched frame by frame. At 2 flashes in a second they drop back to Calm. At 3.5+ flashes per second they stay calm, with a label and three choices.
+- **Watched while it plays.** Normal videos are calm for their first 2 seconds, then released and watched frame by frame. From 2.5 flashes in a second (5 changes) they drop back to Calm. At 3.5+ flashes per second they stay calm, with a label and three choices.
 - **Quiet when things are fine.** Paused videos are never darkened. Safe items get no label at all. One shortcut, <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>, calms the whole page.
 
 | State | What you see | Screen reader (polite) |
@@ -51,7 +51,7 @@ One engine, three consumers: `core/` is pure JS used by Vitest, the Lab, and the
 | `<img>` GIF / animated WebP / APNG-by-URL | Offscreen fetch → `ImageDecoder`, every frame + its duration → analyse | **No** (pre-scanned) |
 | Static WebP | 32-byte `Range` read of the VP8X header | **No** (released in ≈0 ms; prefetch starts 800 px early) |
 | Short muted looping/autoplay `<video>`, progressive MP4 | Offscreen fetch → mp4box.js → WebCodecs `VideoDecoder`, every frame | **No** |
-| Other readable `<video>` (incl. YouTube MSE) | Calm for 2 s of playback → release → live `requestVideoFrameCallback` detection with pre-trip | ≤ 3 transitions of slack (see latency) |
+| Other readable `<video>` (incl. YouTube MSE) | Calm for 2 s of playback → release → live `requestVideoFrameCallback` detection with pre-trip at 5 transitions | 2 transitions of slack (see latency) |
 | Unreadable (cross-origin, DRM) | Stays in Calm; "Play normally" | No, unless you choose to |
 | CSS backgrounds, canvas, CSS/JS animation | Not covered | See Limitations |
 
@@ -89,7 +89,7 @@ All thresholds live in [`core/constants.js`](core/constants.js), sourced from [W
 
 Mutation-checked: re-introducing the "darker side frozen" bug fails only #11; closing the window edge fails only the 3 Hz boundary cases. Every case was also encoded to MP4 with ffmpeg and gives the same answer through WebCodecs in the Lab.
 
-**Pre-trip latency** (live video, [`e2e/latency.json`](e2e/latency.json)): in 10 runs, Strobeproof set Calm Mode **9–14 ms before** the frame carrying the 4th transition was due on screen (worst −9.0 ms, median −11.3 ms, headless Edge). The filter appears on the next rendering update, so at most about one display frame of that 4th transition can show. That's 2 flashes, still under the limit. Not zero, and not claimed as zero.
+**Pre-trip latency** (live video, [`e2e/latency.json`](e2e/latency.json)): pre-trip fires at the 5th transition in a second. In 12 runs Strobeproof set Calm Mode between **10.4 ms before and 7.3 ms after** the frame carrying that 5th transition was due on screen (median 8.8 ms before; headless Edge). The filter appears on the next rendering update, so at most about one display frame of the 5th transition can show: 2.5 flashes, still under the limit of 3. Not zero, and not claimed as zero.
 
 **Benchmark** ([page](https://vishnu-1709.github.io/strobeproof/lab/benchmark.html), [method](lab/benchmark.html)): Strobeproof's own row is automated and frame-exact. **All 9 failing cases were blocked with 0 frames at normal brightness.** Of the 11 passing cases, 6 were released after checking, and 5 were held calm: the 2 Hz case by the pre-trip margin, and the exact-3 Hz cases, where the live path errs on the safe side. Competitor rows are recorded by hand (gated recorder, `bench/index.html?allowLarge=1`).
 

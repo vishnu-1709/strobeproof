@@ -1,20 +1,24 @@
 {
-  "runs": 10,
-  "worst_ms": 8.6,
-  "median_ms": -8.6,
+  "runs": 12,
+  "already_calm_runs": 0,
+  "worst_ms": 7.3,
+  "median_ms": -8.8,
   "all_ms": [
-    -13.2,
-    -8.6,
-    -8.3,
-    -11.3,
-    8.6,
-    -10.6,
-    -13.7,
-    -13.1,
-    -7.4,
-    -8.6
+    -8.8,
+    -10.4,
+    -10.3,
+    -10.2,
+    -6.8,
+    -9.4,
+    -9.3,
+    -10.1,
+    -8.8,
+    7.3,
+    -7,
+    -8.8
   ],
   "browser": "Microsoft Edge (Chromium), headless, Playwright",
   "clip": "late-flash.mp4, 30 fps, 5 Hz from 3.0 s",
+  "trigger": "transition #5 (media 3.4 s)",
   "date": "2026-11-22"
 }

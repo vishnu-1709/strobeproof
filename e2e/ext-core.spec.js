@@ -26,12 +26,21 @@ test('non-flashing video: calm during the 2 s warm-up, then released', async ({ 
   await expect.poll(() => fg(page), { timeout: 8000 }).toBe('safe');
 });
 
-test('2 Hz full-frame flash (4 transitions/s) stays calmed by the pre-trip margin, but is never confirmed risky', async ({ page }) => {
-  // PRETRIP_TRANS = 4 (plan A17), so compliant-but-close 2 Hz flashing is held in Calm while it flashes.
-  await page.goto(P('v=safe-2hz.mp4&opts=controls,muted'));
+test('2 Hz full-frame flash (4 transitions/s, compliant) is released and plays at normal brightness', async ({ page }) => {
+  // PRETRIP_TRANS = 5: 4 transitions/s stays below the pre-trip level.
+  await page.goto(P('v=flash-2hz-6s.mp4&opts=controls,muted'));
   await page.evaluate(() => window.__play());
-  await page.waitForTimeout(2800);
-  expect(['checking', 'calm']).toContain(await fg(page));
+  await expect.poll(() => fg(page), { timeout: 8000 }).toBe('safe');
+  expect((await states(page))[0].filter).toBe('none');
+});
+
+test('2.5 Hz full-frame flash (5 transitions/s) is calmed but never confirmed risky', async ({ page }) => {
+  await page.goto(P('v=flash-2p5hz-6s.mp4&opts=controls,muted'));
+  await page.evaluate(() => window.__play());
+  await page.waitForTimeout(4500);
+  const s = (await states(page))[0];
+  expect(['checking', 'calm']).toContain(s.fg);
+  expect(s.filter).toContain('brightness(0.32)');
 });
 
 test('cross-origin video without CORS: "can\'t check", stays calm', async ({ page }) => {
