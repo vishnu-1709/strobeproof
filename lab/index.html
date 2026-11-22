@@ -28,6 +28,8 @@
       <label for="file">GIF, WebP, PNG, MP4 or WebM</label>
       <input type="file" id="file" accept="image/gif,image/webp,image/png,image/apng,video/mp4,video/quicktime,video/webm,.gif,.webp,.png,.mp4,.m4v,.mov,.webm">
       <p>or drag a file onto this box</p>
+      <p><button type="button" class="secondary" id="sample">Try a sample</button></p>
+      <p class="hint" style="margin-top:4px">Checks a built-in test clip that flashes 5 times a second. It is never played: you only see a small grey still.</p>
     </div>
 
     <fieldset>
@@ -64,6 +66,10 @@
   </section>
 
   <div id="result-live" aria-live="polite" aria-atomic="true"></div>
+  <figure id="sample-preview" hidden>
+    <canvas id="sample-canvas" width="32" height="18" role="img" aria-label="Still of the sample clip's first frame, greyscale" style="width:64px;height:36px;image-rendering:pixelated;border:1px solid var(--line)"></canvas>
+    <figcaption>Sample clip, first frame only (greyscale, 64 px). The clip itself is never played.</figcaption>
+  </figure>
 
   <section id="details" hidden aria-labelledby="details-h">
     <h2 id="details-h">Details</h2>

@@ -18,8 +18,10 @@ function display() {
   return { width: Math.max(16, +$('w').value || 640), height: Math.max(16, +$('h').value || 360), viewportWidth: vw };
 }
 
-function setFile(f) {
-  file = f; media = null; lastReport = null;
+let isSample = false;
+function setFile(f, sample = false) {
+  file = f; media = null; lastReport = null; isSample = sample;
+  $('sample-preview').hidden = true;
   go.disabled = !f;
   $('details').hidden = true; live.innerHTML = '';
   status.textContent = f ? `Ready: ${f.name} (${num(f.size / 1024)} KB).` : '';
@@ -56,6 +58,24 @@ function fail(message) {
   v.innerHTML = `<h2>Couldn't check this file</h2><p></p>`;
   v.querySelector('p').textContent = message;
   live.append(v);
+}
+
+$('sample').addEventListener('click', async () => {
+  status.textContent = 'Loading the sample…';
+  const res = await fetch('../demo/media/flash-5hz.mp4');
+  if (!res.ok) return fail('The sample clip could not be loaded.');
+  setFile(new File([await res.blob()], 'sample-flash-5hz.mp4', { type: 'video/mp4' }), true);
+  go.click();
+});
+
+function drawPreview(L) {
+  const c = $('sample-canvas'), g = c.getContext('2d'), img = g.createImageData(32, 18);
+  for (let i = 0; i < 576; i++) {
+    const l = L[i], v = Math.round(255 * (l <= 0.0031308 ? 12.92 * l : 1.055 * l ** (1 / 2.4) - 0.055));
+    img.data.set([v, v, v, 255], i * 4);
+  }
+  g.putImageData(img, 0, 0);
+  $('sample-preview').hidden = false;
 }
 
 go.addEventListener('click', async () => {
@@ -147,6 +167,7 @@ function show(report) {
   }
   live.innerHTML = '';
   live.append(v);
+  if (isSample && media?.preview) drawPreview(media.preview);
   drawChart(report);
   drawStats(report);
   $('details').hidden = false;

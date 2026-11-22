@@ -97,3 +97,17 @@ test('crop mode (screen recordings): region size and screen width decide the are
   expect(await run(1024)).toMatch(/^Safe to post/);     // 14,400 px² on a 1024-wide screen: below the limit
   expect(await run(320)).toMatch(/Flashes too fast/);   // same region on a 320-wide screen: 147,456 px²
 });
+
+test('Try a sample: instant FAIL verdict and chart, only a 64 px grey still is shown, axe clean', async ({ page }) => {
+  await page.goto('/lab/index.html');
+  const t0 = Date.now();
+  await page.getByRole('button', { name: 'Try a sample' }).click();
+  await expect(page.locator('#result-live .verdict')).toContainText('Flashes too fast', { timeout: 10_000 });
+  console.log(`sample verdict in ${Date.now() - t0} ms`);
+  await expect(page.locator('#chart path')).toHaveCount(2);
+  const prev = page.locator('#sample-canvas');
+  await expect(prev).toBeVisible();
+  expect(await prev.evaluate((c) => [c.getBoundingClientRect().width, c.getBoundingClientRect().height])).toEqual([64, 36]);
+  expect(await page.locator('video:visible, img[src*="flash"]').count()).toBe(0); // the clip itself is never shown
+  await axe(page);
+});

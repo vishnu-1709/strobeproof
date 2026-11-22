@@ -55,6 +55,8 @@ self.onmessage = async (e) => {
       self.postMessage({ type: 'needs-playback' });
       return;
     }
+    // Static greyscale still of the first frame (32×18 luminance tiles), for the sample preview.
+    media.preview = cache.frames.length ? Array.from(cache.frames[0].tiles.L) : null;
     self.postMessage({ type: 'progress', text: 'Checking for flashes…' });
     run(m.display);
   } catch (err) {
