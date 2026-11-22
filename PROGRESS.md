@@ -15,7 +15,7 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | M5 | Pre-scan | 50 min | done, e2e 9/9 (static WebP release max 0 ms) | ~20 min | m5-done |
 | M6 | UX layer | 60 min | done, e2e 10/10, axe 0 everywhere | ~30 min | m6-done |
 | M7 | E2E + latency | 40 min | done: Calm set 8–14 ms before the 4th transition is due on screen (10 runs) | ~15 min | m7-done |
-| M8 | Benchmark support | 45 min | done: all 9 failing cases blocked; recorder gated; competitor rows need the human | ~35 min | m8-done |
+| M8 | Benchmark support | 45 min | done: all 7 failing bench cases blocked; recorder gated; competitor rows need the human | ~35 min | m8-done |
 | M9 | Ship | 35 min | done except: public repo + Pages, v1.0 tag (both need the human) | ~30 min | – |
 
 ## Decisions
@@ -54,6 +54,7 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | History rewrite (human decision) | git filter-repo: both personal emails → GitHub noreply, attribution trailers stripped, dates verified identical for all 18 commits; force-pushed once; repo public; Pages on main. Backup bundle kept outside the repo. |
 
 ## Open issues
+- Not changed (no new behaviour without the human): an "uncertain" frame-skip pre-trip during warm-up restarts the 3 s quiet period, so very short clips can end before release on a busy machine. Safe-side. Option: let only pre-trip transitions (not skips) restart the quiet period.
 - Hackathon deadline and AI-use rule not yet provided.
 - C4: Reddit/X GIF-video fetchability + Reddit shadow DOM need the human's real-Chrome spike run (SPIKE.md).
 - Human-only: NVDA/VoiceOver, 200% zoom, forced colours, hallway test; competitor benchmark recordings; install GIF (docs/install.gif); demo video; Devpost ⚠ facts.

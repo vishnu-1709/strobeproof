@@ -41,7 +41,7 @@ Constants with the W3C link; the transition rule (≥ 0.10 change, darker side <
 - Suite: 20/20 cases match. Mutation-checked: the A8 bug breaks only #11, and the A9 bug breaks only the 3 Hz boundaries.
 - Every case encoded with ffmpeg → MP4 → WebCodecs gives the same answer.
 - Pre-trip latency: pre-trip at the 5th transition; Calm Mode set 10.8 ms before to 5.6 ms after that frame was due on screen (12 runs; worst ever seen 7.3 ms after). At most about one display frame of it shows: 2.5 flashes, under the limit.
-- Benchmark: Strobeproof blocked all 9 failing cases, with 0 frames at normal brightness. Competitor rows: (fill in after recording, with versions and date).
+- Benchmark: Strobeproof blocked all 7 failing benchmark cases, with 0 frames at normal brightness (case 14 can't be a constant-rate file, so it's suite-only). Competitor rows: (fill in after recording, with versions and date).
 
 ## 8. Accessibility of the tool itself
 No animation anywhere; 44 px targets; Tab/Enter/Esc; labels next to their media in Tab order; polite announcements only for events you must act on; forced colours; caregiver lock; plain language (grade-6 style) in the extension. axe-core: 0 violations on every surface. Hallway test: (one sentence after running it, plan §3.5).
