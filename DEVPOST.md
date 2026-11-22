@@ -75,9 +75,9 @@ Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding as
 - **Researched the existing tools and the WCAG 2.3.1 flash rules** before the build. (Claude Code compiled the comparison table from the store listings.)
 - **Made every spec and design decision** (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition rule, the pre-trip design (including moving it from 4 to 5 transitions), Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - **Wrote and approved the test answers** (`expected.json`), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red-only rule.
-- **Ran the real-browser checks and the spike**: the spike on Reddit/X in real Chrome, testing on YouTube, and the release check in Chrome. ⚠ confirm both are done before submitting.
+- **Ran the real-browser checks**: the release check in Chrome and testing on YouTube. The manual spike on Reddit/X was not done, so the GIF-video pre-scan hasn't been confirmed on those sites.
 - **Designed the benchmark**: the cases, the method, what counts as blocked. I chose to compare other tools by their public store listings instead of screen-recording them.
-- **Made the video.** ⚠
+- **Made the video.**
 
 **What Claude Code did: the implementation**
 - The detection engine, including `core/flashCounter.js` and `core/areaGrid.js`. These two were AI-drafted by Claude Code from my pseudocode, then reviewed and approved by me.
@@ -98,6 +98,6 @@ I'm a college student and still a beginner at coding, but I love building things
 
 I chose the problem after reading about strobing GIFs being used to attack people with epilepsy. I researched the existing tools and the WCAG 2.3.1 flash rules, designed the approach (Calm Mode, test-first, an honest "can't check" state), made every design decision along the way, approved all 20 test answers (including catching that pure red is also a general flash), tested it in real Chrome and on YouTube, and made this video.
 
-Since I'm still learning, I built it with Claude Code as my pair programmer. It wrote most of the implementation, including the detection engine, which I reviewed, approved and can explain.
+Since I'm still learning, I built it with Claude Code as my pair programmer. It wrote the code, including the detection engine, under my direction. I reviewed and approved it, and can explain how it works.
 
 The biggest thing I learned is that safety software has to be provable, not just plausible, which is why the project starts with a test suite. I'm leaving this hackathon understanding how flash detection works frame by frame, how browser extensions are structured, and why accessibility has to be designed in from the start. Next time, I want to write more of the code myself.

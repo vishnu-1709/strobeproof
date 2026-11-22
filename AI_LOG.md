@@ -10,7 +10,7 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 - Made every spec and design decision (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, the change from 4 to 5 transitions, Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - Wrote and approved the test answers (`core/__tests__/expected.json`, plan §4.5), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red rule.
 - Reviewed and approved `core/flashCounter.js` and `core/areaGrid.js`.
-- Ran the real-browser checks and the spike: the manual spike on Reddit/X, testing on YouTube, and the release check in Chrome. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
+- Ran the real-browser checks: the release check in Chrome and testing on YouTube. The manual spike on Reddit/X was not done. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
 - Made the video.
 
 **Claude Code (AI assistant): the implementation**
@@ -34,7 +34,7 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 | `7f1489a` M0 spike kit | Spike extension, Playwright runner | Defined the five spike questions (plan) |
 | `e688a24` core groundwork | constants.js transcribed from plan §4.1, fixtures, luminance, analyzer, decoders, tests | Constants and test cases specified in the plan |
 | `1002278` flashCounter + areaGrid | Both files, AI-drafted from the owner's §4.3/§4.4 pseudocode (the versions in use today) | Reviewed and approved both; reviewed expected.json and added case 9b plus the case-9 general assertion; chose linear RGB for the red rule |
-| `dcabdaf` spike results | Ran the automated spike, wrote SPIKE.md | Reddit/X manual run pending |
+| `dcabdaf` spike results | Ran the automated spike, wrote SPIKE.md | Reddit/X manual run not done |
 | `207d534` Lab | Lab pages, worker, clip generator, server, Lab E2E | – |
 | `2392f32` extension core | manifest, calm.css, sw.js, content.js, settings, chips | Plan design (Calm by default, pre-trip, states) |
 | `7bd525e` pre-scan | offscreen.js, cache, WebP header path | WebP fast-release rule (Decision C6) |
@@ -47,4 +47,4 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 | Try a sample | Lab sample button + test | Specified it |
 | stub, then restore | Briefly replaced both files with stubs, then restored the AI drafts from `490f4a9` unchanged and relabelled them | Decided to keep the AI-drafted versions, reviewed and approved, and credit them as such |
 | comparison | Read the five store listings, wrote lab/comparison.json and the tables (benchmark page, README, Devpost) | Chose listing-based comparison over competitor recordings; chose the tools |
-| How I built this | Pasted the section into DEVPOST.md and aligned this file with it | Wrote the "How I built this" text |
+| How I built this | Pasted the section into DEVPOST.md and aligned this file with it | Wrote the "How I built this" text; confirmed which real-browser checks were done |
