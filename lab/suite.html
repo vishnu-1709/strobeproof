@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof Test Suite</title>
+<meta name="description" content="The known-answer test suite behind Strobeproof, run live in your browser: expected vs actual for every case.">
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Strobeproof Lab</a>
+  <nav aria-label="Lab pages"><ul>
+    <li><a href="index.html">Check a file</a></li>
+    <li><a href="suite.html" aria-current="page">Test suite</a></li>
+    <li><a href="benchmark.html">Benchmark</a></li>
+  </ul></nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <h1>Known-answer test suite</h1>
+  <p class="lede">Every flash blocker says it follows WCAG 2.3.1. These are the cases that prove it, including the ones naive detectors get wrong: slow ramps, boundary frequencies, small areas, red-only flashes and dropped frames. The clips are synthetic frame arrays generated in your browser and are never shown. The expected answers are locked in <code>core/__tests__/expected.json</code>.</p>
+
+  <button id="run">Run the suite again</button>
+  <p class="status" id="status" role="status">Running…</p>
+  <div id="summary" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="suite-caption">
+    <table>
+      <caption id="suite-caption" class="skip">Suite results: expected and actual verdict for each case</caption>
+      <thead><tr><th scope="col">#</th><th scope="col">Case</th><th scope="col">Expected</th><th scope="col">Actual</th><th scope="col">Peak transitions / s</th><th scope="col">Match</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <h2>How to read this</h2>
+  <ul>
+    <li>A <strong>transition</strong> is a change in relative luminance of at least 0.10 where the darker side is below 0.80. Two opposing transitions make a flash.</li>
+    <li><strong>FAIL</strong> means 7 or more transitions (more than 3 flashes) in some 1-second window, over more than 25% of a 10° field of view (21,824 px² at 1024×768).</li>
+    <li>Case 15 runs case 2 through Calm Mode (<code>grayscale(1) brightness(0.32)</code>). It passes because Calm Mode caps white at relative luminance 0.084, below the 0.10 needed for any transition.</li>
+  </ul>
+</main>
+
+<footer class="site"><div class="wrap">
+  Source: <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html">W3C, Understanding SC 2.3.1</a>. Strobeproof reduces exposure; it is not a medical device.
+</div></footer>
+<script type="module" src="suite.js"></script>
+</body>
+</html>

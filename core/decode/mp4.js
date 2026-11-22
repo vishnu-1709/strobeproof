@@ -30,15 +30,27 @@ export async function decodeMp4(buffer, opts = {}) {
   const frames = [];
   let total = 0, decodeError = null;
 
+  // Extraction must be configured inside onReady, before the parser finishes with the buffer;
+  // configuring it afterwards silently yields zero samples.
+  const samples = [];
   const info = await new Promise((resolve, reject) => {
     file.onError = (e) => reject(new Error('mp4 parse error: ' + e));
-    file.onReady = resolve;
+    file.onReady = (info) => {
+      const vt = info.videoTracks?.[0];
+      if (vt) {
+        file.onSamples = (_id, _user, s) => { samples.push(...s); };
+        file.setExtractionOptions(vt.id, null, { nbSamples: Infinity });
+        file.start();
+      }
+      resolve(info);
+    };
     const buf = MP4BoxBuffer.fromArrayBuffer(buffer.slice(0), 0);
     file.appendBuffer(buf);
     file.flush();
   });
   const track = info.videoTracks?.[0];
   if (!track) throw new Error('no video track');
+  if (samples.length === 0) throw new Error('no video frames found in this file');
   const maxT = opts.maxDurationS ?? Infinity;
 
   const decoder = new VideoDecoder({
@@ -63,11 +75,6 @@ export async function decodeMp4(buffer, opts = {}) {
   if (!support.supported) { decoder.close(); throw new Error(`codec ${track.codec} not supported`); }
   decoder.configure(config);
 
-  const samples = [];
-  file.onSamples = (_id, _user, s) => { samples.push(...s); };
-  file.setExtractionOptions(track.id, null, { nbSamples: Infinity });
-  file.start();
-  file.flush();
   total = samples.length;
   for (const s of samples) {
     if (decodeError) break;
@@ -91,8 +98,10 @@ export async function decodeMp4(buffer, opts = {}) {
     frameCount: frames.length,
     expectedFrames: total,
     codec: track.codec,
+    width: track.video.width,
+    height: track.video.height,
     // Every encoded sample must come out as a frame, otherwise the verdict can't be PASS.
-    incomplete: !!decodeError || (!Number.isFinite(maxT) && frames.length < total),
+    incomplete: !!decodeError || frames.length === 0 || (!Number.isFinite(maxT) && frames.length < total),
     error: decodeError ? String(decodeError) : null,
   };
 }

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof Lab</title>
+<meta name="description" content="Check a GIF or video for flashing above the WCAG 2.3.1 thresholds. Every frame is analysed in your browser; nothing is uploaded.">
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">Strobeproof Lab</a>
+  <nav aria-label="Lab pages"><ul>
+    <li><a href="index.html" aria-current="page">Check a file</a></li>
+    <li><a href="suite.html">Test suite</a></li>
+    <li><a href="benchmark.html">Benchmark</a></li>
+  </ul></nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <h1>Is it safe to post?</h1>
+  <p class="lede">Drop a GIF, WebP, PNG or video. Strobeproof checks <strong>every frame</strong> against the WCAG 2.3.1 flash thresholds, in your browser. Nothing is uploaded, and the file is never played on screen.</p>
+
+  <section class="card" aria-labelledby="pick-h">
+    <h2 id="pick-h" style="margin-top:0">1. Choose a file</h2>
+    <div class="drop" id="drop">
+      <label for="file">GIF, WebP, PNG, MP4 or WebM</label>
+      <input type="file" id="file" accept="image/gif,image/webp,image/png,image/apng,video/mp4,video/quicktime,video/webm,.gif,.webp,.png,.mp4,.m4v,.mov,.webm">
+      <p>or drag a file onto this box</p>
+    </div>
+
+    <fieldset>
+      <legend>2. How big will it be on screen?</legend>
+      <p class="hint" style="margin-top:0">Flashing that covers a small area is allowed. The limit depends on the displayed size.</p>
+      <div class="radio"><input type="radio" name="size" id="size-native" value="native" checked><label for="size-native" id="native-label">At its own size</label></div>
+      <div class="radio"><input type="radio" name="size" id="size-custom" value="custom"><label for="size-custom">At a size I choose</label></div>
+      <div class="row" id="custom-row">
+        <div><label for="w">Width (CSS px)</label><input type="number" id="w" min="16" max="8000" value="640" inputmode="numeric"></div>
+        <div><label for="h">Height (CSS px)</label><input type="number" id="h" min="16" max="8000" value="360" inputmode="numeric"></div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <div><label for="vw">Screen width (CSS px)</label><input type="number" id="vw" min="320" max="8000" value="1024" inputmode="numeric">
+        <p class="hint">1024 is the WCAG reference screen.</p></div>
+      </div>
+    </fieldset>
+    <button id="go" disabled>Check it</button>
+    <p class="status" id="status" role="status"></p>
+    <figure id="player-box" hidden>
+      <video id="player" muted playsinline tabindex="-1" style="width:160px;height:90px;background:#000;filter:grayscale(1) brightness(0.32)"></video>
+      <figcaption>This format can't be decoded directly, so it plays once in Calm Mode (dimmed, grey, 160 px) while every presented frame is checked.</figcaption>
+    </figure>
+  </section>
+
+  <div id="result-live" aria-live="polite" aria-atomic="true"></div>
+
+  <section id="details" hidden aria-labelledby="details-h">
+    <h2 id="details-h">Details</h2>
+    <figure>
+      <svg class="chart" id="chart" viewBox="0 0 1000 240" role="img" aria-labelledby="chart-title chart-desc">
+        <title id="chart-title">Brightness changes per second over time</title>
+        <desc id="chart-desc"></desc>
+      </svg>
+      <ul class="legend" aria-hidden="true">
+        <li><span class="sw" style="background:var(--series-a)"></span>General flashes (transitions in the last second)</li>
+        <li><span class="sw" style="background:var(--series-b)"></span>Red flashes</li>
+        <li><span class="sw" style="background:var(--limit)"></span>Limit: 7 transitions = more than 3 flashes</li>
+      </ul>
+      <figcaption>Each point counts luminance transitions (≥ 0.10 change, darker side &lt; 0.80) in the 1-second window ending at that frame, in the worst area of the frame. Shaded spans failed.</figcaption>
+    </figure>
+    <div class="card"><dl class="stats" id="stats"></dl></div>
+    <button class="secondary" id="export">Download report (JSON)</button>
+  </section>
+</main>
+
+<footer class="site"><div class="wrap">
+  Thresholds: <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html">WCAG 2.3.1 Three Flashes or Below Threshold</a>. Strobeproof reduces exposure; it is not a medical device. Results assume WCAG reference viewing conditions.
+</div></footer>
+
+<script type="module" src="lab.js"></script>
+</body>
+</html>

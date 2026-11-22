@@ -1,5 +1,5 @@
 // Every-frame decode of animated images (GIF, animated WebP, APNG) with ImageDecoder (plan A10, §3.2).
-// Output: { frames: [{ t, tiles }], loopDuration, frameCount, animated } — tiles at SAMPLE_W×SAMPLE_H.
+// Output: { frames: [{ t, tiles }], loopDuration, frameCount, animated, width, height, incomplete } — tiles at SAMPLE_W×SAMPLE_H.
 // Runs in window or worker contexts (needs ImageDecoder + OffscreenCanvas). Not in service workers.
 import { SAMPLE_W, SAMPLE_H, WINDOW_S } from '../constants.js';
 import { tilesFromRGBA } from '../luminance.js';
@@ -24,10 +24,11 @@ export async function decodeAnimatedImage(data, type, opts = {}) {
     const canvas = new OffscreenCanvas(SAMPLE_W, SAMPLE_H);
     const g = canvas.getContext('2d', { willReadFrequently: true });
     const one = [];
-    let t = 0;
+    let t = 0, width = 0, height = 0;
     const max = opts.maxFrames ?? 5000;
     for (let i = 0; i < Math.min(frameCount, max); i++) {
       const { image } = await dec.decode({ frameIndex: i, completeFramesOnly: true });
+      if (!width) { width = image.displayWidth; height = image.displayHeight; }
       g.clearRect(0, 0, SAMPLE_W, SAMPLE_H);
       g.drawImage(image, 0, 0, SAMPLE_W, SAMPLE_H);
       const px = g.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data;
@@ -47,7 +48,7 @@ export async function decodeAnimatedImage(data, type, opts = {}) {
         for (const f of one) frames.push({ t: f.t + k * loopDuration, tiles: f.tiles });
       }
     }
-    return { frames, loopDuration, frameCount, animated };
+    return { frames, loopDuration, frameCount, animated, width, height, incomplete: frameCount > max };
   } finally {
     dec.close();
   }

@@ -90,7 +90,8 @@ export function analyzeFrames(frames, opts = {}) {
   const fail = generalFail || redFail;
   const duration = frames.length ? frames[frames.length - 1].t - frames[0].t : 0;
   return {
-    verdict: fail ? 'FAIL' : opts.incomplete ? 'INCOMPLETE' : 'PASS',
+    // Zero frames is never a pass: nothing was checked.
+    verdict: fail ? 'FAIL' : opts.incomplete || frames.length === 0 ? 'INCOMPLETE' : 'PASS',
     general: { fail: generalFail, maxTransitions: maxG, maxAreaPx: maxGA },
     red: { fail: redFail, maxTransitions: maxR, maxAreaPx: maxRA },
     worst: { ...worst, flashesPerSecond: worst.transitions / 2 },
