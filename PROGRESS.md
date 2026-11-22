@@ -55,6 +55,7 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | flashCounter.js / areaGrid.js authorship (human decision) | Keep the AI-drafted versions (restored unchanged from 490f4a9 after a brief stub). Credited everywhere as "AI-drafted by Claude Code; reviewed and approved by me"; no handwritten claims. |
 | 2026-11-22 | PRETRIP_TRANS after the loaded-latency result (human decision) | Keep 5. Under heavy load the worst run let 6 transitions through (3 flashes, at the limit, not over); idle machines switch within ~1 frame. Reported in README and Devpost. |
 | 2026-11-22 | Competitor benchmark (human decision) | Skip screen recordings. Compare NeuroShield, CogniShield, Seizafe, Epilepsy Blocker and PhotosensitivityPal using only their public store listings (lab/comparison.json → benchmark page, README, Devpost; "?" where a listing doesn't say). Epilepsy Blocker was read via the AMO public API (the page had a bot check); the PhotosensitivityPal listing showed no details. Strobeproof's own 7/7 result stays alongside. |
+| 2026-11-22 | PhotosensitivityPal in the comparison (human decision) | Column removed (listing unreachable); one line under the table: "listing unavailable on 22 Nov 2026". |
 
 ## Open issues
 - Intermittent under full-suite load: the "30 static WebPs within 300 ms" test failed once (one image not released in the window); passes 3/3 in isolation (max 0 ms). Not changed.

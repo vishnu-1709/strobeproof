@@ -2,20 +2,62 @@
   "_note": "Feature comparison. Other tools: ONLY what each tool's public store listing states, read on the date below; '?' = the listing doesn't say. Strobeproof: this repo. Paraphrased; see each source.",
   "checked": "2026-11-22",
   "rows": [
-    ["browser", "Browser"],
-    ["sites", "Works on"],
-    ["media", "Media covered"],
-    ["method", "How flashing is detected"],
-    ["red", "Red-flash rule"],
-    ["area", "Screen-area / region check"],
-    ["before", "Checked or calmed before it's shown"],
-    ["action", "What happens to flashing content"],
-    ["unreadable", "Cross-origin / DRM video"],
-    ["settings", "Sensitivity settings"],
-    ["a11y", "Keyboard / screen reader"],
-    ["evidence", "Published evidence"],
-    ["bench", "Strobeproof benchmark: failing cases blocked"],
-    ["listing", "Listing: version · updated · users"]
+    [
+      "browser",
+      "Browser"
+    ],
+    [
+      "sites",
+      "Works on"
+    ],
+    [
+      "media",
+      "Media covered"
+    ],
+    [
+      "method",
+      "How flashing is detected"
+    ],
+    [
+      "red",
+      "Red-flash rule"
+    ],
+    [
+      "area",
+      "Screen-area / region check"
+    ],
+    [
+      "before",
+      "Checked or calmed before it's shown"
+    ],
+    [
+      "action",
+      "What happens to flashing content"
+    ],
+    [
+      "unreadable",
+      "Cross-origin / DRM video"
+    ],
+    [
+      "settings",
+      "Sensitivity settings"
+    ],
+    [
+      "a11y",
+      "Keyboard / screen reader"
+    ],
+    [
+      "evidence",
+      "Published evidence"
+    ],
+    [
+      "bench",
+      "Strobeproof benchmark: failing cases blocked"
+    ],
+    [
+      "listing",
+      "Listing: version · updated · users"
+    ]
   ],
   "tools": [
     {
@@ -112,25 +154,11 @@
       "evidence": "?",
       "bench": "not tested",
       "listing": "1.0.41 · 2019-08-22 · 70"
-    },
-    {
-      "name": "PhotosensitivityPal",
-      "source": "https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh",
-      "sourceLabel": "Chrome Web Store (listing showed no details when checked)",
-      "browser": "?",
-      "sites": "?",
-      "media": "?",
-      "method": "?",
-      "red": "?",
-      "area": "?",
-      "before": "?",
-      "action": "?",
-      "unreadable": "?",
-      "settings": "?",
-      "a11y": "?",
-      "evidence": "?",
-      "bench": "not tested",
-      "listing": "?"
     }
-  ]
+  ],
+  "footnote": {
+    "text": "PhotosensitivityPal: listing unavailable on 22 Nov 2026.",
+    "name": "PhotosensitivityPal",
+    "source": "https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh"
+  }
 }

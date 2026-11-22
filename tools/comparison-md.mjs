@@ -17,7 +17,9 @@ const md = [
   '',
   head, sep, ...rows,
   '',
-  `Sources: ${sources}. The PhotosensitivityPal listing page showed no details when checked.`,
+  `Sources: ${sources}.`,
+  '',
+  c.footnote ? c.footnote.text.replace(c.footnote.name, `[${c.footnote.name}](${c.footnote.source})`) : '',
 ].join('\n');
 
 for (const f of ['README.md', 'DEVPOST.md']) {

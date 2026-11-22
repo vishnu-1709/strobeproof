@@ -16,24 +16,26 @@ Every flash blocker says it follows WCAG. Strobeproof is the one that proves it:
 <!-- comparison:start -->
 Other tools: only what each tool's public store listing states, checked 2026-11-22. "?" means the listing doesn't say. Strobeproof: this repo. Other tools weren't run through the benchmark.
 
-| Feature | **Strobeproof** | **NeuroShield** | **CogniShield** | **Seizafe** | **Epilepsy Blocker** | **PhotosensitivityPal** |
-|---|---|---|---|---|---|---|
-| Browser | Chrome, Edge, Brave | Chrome | Chrome | Chrome | Firefox | ? |
-| Works on | All sites (except ones you allow) | All websites | YouTube only | YouTube only | ? | ? |
-| Media covered | GIF, animated WebP, video | Video (GIFs: ?) | YouTube video | YouTube video | Animated GIFs | ? |
-| How flashing is detected | WCAG 2.3.1: ΔL ≥ 0.10, darker < 0.80, ≥ 7 transitions in any 1 s, per-pixel linear luminance in 32×18 tiles | WCAG 2.3.1: ΔL > 0.1, darker < 0.80, 1 s window; frames sampled at 15 fps, 32×32 | Rapid brightness changes in video frames; says it follows WCAG 2.3.1 (no numbers given) | ? ("an algorithm") | ? ("specialized algorithm" based on photosensitivity research) | ? |
-| Red-flash rule | Yes (WCAG red rule) | Yes (WCAG 2.3.2) | ? | ? | ? | ? |
-| Screen-area / region check | Yes: 25% of a 10° field, scaled to screen width | Yes: 4×4 grid of zones | ? | ? | ? | ? |
-| Checked or calmed before it's shown | Yes: unchecked media starts in Calm Mode; GIFs and GIF-style videos are decoded before release | ? (runs at document_start; overlay appears when flashing is detected) | ? (dims when flashing is detected) | Says it warns before flashing scenes (how: ?) | ? | ? |
-| What happens to flashing content | Calm Mode (grey, dimmed below the threshold) or hide; Keep Calm / Show original / Allow site | Overlay with Dim (30%) / Pause / Continue | Dims the video | Warning | Blocks the GIF | ? |
-| Cross-origin / DRM video | Shown in Calm Mode (can't flash) with "Play normally" | Cross-origin: opt-in CSS filter. DRM: ? | ? | ? | ? | ? |
-| Sensitivity settings | Standard / Extra careful | 4 levels (1+, 2+, 3+, 5+ flashes/s) | Auto-detect and sliders (flash-guard sensitivity: ?) | Sensitivity control | ? | ? |
-| Keyboard / screen reader | Yes: Tab/Enter/Esc, polite announcements, axe-core 0 violations | Yes: ARIA roles, keyboard (Esc), screen reader | ? | ? | ? | ? |
-| Published evidence | Public 20-case known-answer suite, latency and benchmark results | Claims 84 unit tests; published results: ? | ? | ? | ? | ? |
-| Strobeproof benchmark: failing cases blocked | 7/7 blocked, 0 frames at normal brightness | not tested | not tested | not tested | not tested | not tested |
-| Listing: version · updated · users | 1.0.0 · 2026-11-22 · – | 1.0.0 · 2026-04-13 · 40 | 1.0.0 · 2026-04-19 · 25 | 0.0.0.5 · 2025-01-31 · 244 | 1.0.41 · 2019-08-22 · 70 | ? |
+| Feature | **Strobeproof** | **NeuroShield** | **CogniShield** | **Seizafe** | **Epilepsy Blocker** |
+|---|---|---|---|---|---|
+| Browser | Chrome, Edge, Brave | Chrome | Chrome | Chrome | Firefox |
+| Works on | All sites (except ones you allow) | All websites | YouTube only | YouTube only | ? |
+| Media covered | GIF, animated WebP, video | Video (GIFs: ?) | YouTube video | YouTube video | Animated GIFs |
+| How flashing is detected | WCAG 2.3.1: ΔL ≥ 0.10, darker < 0.80, ≥ 7 transitions in any 1 s, per-pixel linear luminance in 32×18 tiles | WCAG 2.3.1: ΔL > 0.1, darker < 0.80, 1 s window; frames sampled at 15 fps, 32×32 | Rapid brightness changes in video frames; says it follows WCAG 2.3.1 (no numbers given) | ? ("an algorithm") | ? ("specialized algorithm" based on photosensitivity research) |
+| Red-flash rule | Yes (WCAG red rule) | Yes (WCAG 2.3.2) | ? | ? | ? |
+| Screen-area / region check | Yes: 25% of a 10° field, scaled to screen width | Yes: 4×4 grid of zones | ? | ? | ? |
+| Checked or calmed before it's shown | Yes: unchecked media starts in Calm Mode; GIFs and GIF-style videos are decoded before release | ? (runs at document_start; overlay appears when flashing is detected) | ? (dims when flashing is detected) | Says it warns before flashing scenes (how: ?) | ? |
+| What happens to flashing content | Calm Mode (grey, dimmed below the threshold) or hide; Keep Calm / Show original / Allow site | Overlay with Dim (30%) / Pause / Continue | Dims the video | Warning | Blocks the GIF |
+| Cross-origin / DRM video | Shown in Calm Mode (can't flash) with "Play normally" | Cross-origin: opt-in CSS filter. DRM: ? | ? | ? | ? |
+| Sensitivity settings | Standard / Extra careful | 4 levels (1+, 2+, 3+, 5+ flashes/s) | Auto-detect and sliders (flash-guard sensitivity: ?) | Sensitivity control | ? |
+| Keyboard / screen reader | Yes: Tab/Enter/Esc, polite announcements, axe-core 0 violations | Yes: ARIA roles, keyboard (Esc), screen reader | ? | ? | ? |
+| Published evidence | Public 20-case known-answer suite, latency and benchmark results | Claims 84 unit tests; published results: ? | ? | ? | ? |
+| Strobeproof benchmark: failing cases blocked | 7/7 blocked, 0 frames at normal brightness | not tested | not tested | not tested | not tested |
+| Listing: version · updated · users | 1.0.0 · 2026-11-22 · – | 1.0.0 · 2026-04-13 · 40 | 1.0.0 · 2026-04-19 · 25 | 0.0.0.5 · 2025-01-31 · 244 | 1.0.41 · 2019-08-22 · 70 |
 
-Sources: [Strobeproof](https://github.com/vishnu-1709/strobeproof) · [NeuroShield](https://chromewebstore.google.com/detail/neuroshield/dbmdhjhmfmdnohcphcmdlfaiipdoldfk) · [CogniShield](https://chromewebstore.google.com/detail/kmengpakcdmpcliojljfepdokneehmdn) · [Seizafe](https://chromewebstore.google.com/detail/goageegpmdbgenkgkhfhnnjmgmgboegi) · [Epilepsy Blocker](https://addons.mozilla.org/en-US/firefox/addon/epilepsy-blocker/) · [PhotosensitivityPal](https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh). The PhotosensitivityPal listing page showed no details when checked.
+Sources: [Strobeproof](https://github.com/vishnu-1709/strobeproof) · [NeuroShield](https://chromewebstore.google.com/detail/neuroshield/dbmdhjhmfmdnohcphcmdlfaiipdoldfk) · [CogniShield](https://chromewebstore.google.com/detail/kmengpakcdmpcliojljfepdokneehmdn) · [Seizafe](https://chromewebstore.google.com/detail/goageegpmdbgenkgkhfhnnjmgmgboegi) · [Epilepsy Blocker](https://addons.mozilla.org/en-US/firefox/addon/epilepsy-blocker/).
+
+[PhotosensitivityPal](https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh): listing unavailable on 22 Nov 2026.
 <!-- comparison:end -->
 
 Also related, not re-checked against their listings today ⚠: CalmWeb (Firefox), Photosensitivity Video Blocker (Chrome), Flikcer (2021 research prototype), EPI-LENS (open-source analysis tool), PEAT (Trace Center desktop analyser for developers).

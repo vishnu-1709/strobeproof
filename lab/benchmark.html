@@ -31,6 +31,7 @@
     </table>
   </div>
   <p class="hint" id="cmp-sources"></p>
+  <p class="hint" id="cmp-foot"></p>
 
   <h2>Strobeproof on the known-answer cases</h2>
   <p class="status" id="status" role="status">Loading results…</p>
@@ -100,6 +101,11 @@
   const src = document.getElementById('cmp-sources');
   src.append('Sources: ');
   cmp.tools.forEach((t, i) => { const a = document.createElement('a'); a.href = t.source; a.textContent = `${t.name} (${t.sourceLabel})`; src.append(a, i < cmp.tools.length - 1 ? ' · ' : '.'); });
+  if (cmp.footnote) {
+    const foot = document.getElementById('cmp-foot'), a = document.createElement('a');
+    a.href = cmp.footnote.source; a.textContent = cmp.footnote.name;
+    foot.append(a, cmp.footnote.text.slice(cmp.footnote.name.length));
+  }
   const sp = bench.tools.find((t) => t.name === 'Strobeproof');
   document.getElementById('status').textContent = sp?.date ? `Strobeproof row measured on ${sp.date}. ${bench.status}.` : bench.status;
 </script>

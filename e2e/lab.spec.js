@@ -70,9 +70,10 @@ test('benchmark page: listing-based comparison + every bench case, axe clean', a
   await page.goto('/lab/benchmark.html');
   await expect(page.locator('#rows tr')).toHaveCount(18);
   await expect(page.locator('#cmp-rows tr')).toHaveCount(14);
-  await expect(page.locator('#cmp-head th')).toHaveCount(7);
+  await expect(page.locator('#cmp-head th')).toHaveCount(6);
   await expect(page.locator('#cmp-rows')).toContainText('7/7 blocked');
-  await expect(page.locator('#cmp-sources a')).toHaveCount(6);
+  await expect(page.locator('#cmp-sources a')).toHaveCount(5);
+  await expect(page.locator('#cmp-foot')).toHaveText('PhotosensitivityPal: listing unavailable on 22 Nov 2026.');
   await expect(page.locator('#status')).toContainText('Strobeproof row measured');
   await axe(page);
 });
