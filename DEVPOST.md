@@ -71,10 +71,11 @@ See the README Limitations section (canvas, CSS animation, CSS backgrounds, stri
 Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding assistant). In line with the EvoHacks 2.0 rule ("AI is accepted but you should not use it to create the whole project"), here is the split. The full per-commit record is in [AI_LOG.md](AI_LOG.md), which matches this section.
 
 **What I did**
-- **Chose the idea and the approach.** A flash detector you can verify: a known-answer suite, a benchmark of existing tools, and Calm Mode by default. I wrote the build plan.
+- **Chose the idea and the approach.** A flash detector you can verify: a known-answer suite, a benchmark of existing tools, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan.
+- **Researched the existing tools and the WCAG 2.3.1 flash rules** before the build. (Claude Code compiled the comparison table from the store listings.)
 - **Made every spec and design decision** (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition rule, the pre-trip design (including moving it from 4 to 5 transitions), Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - **Wrote and approved the test answers** (`expected.json`), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red-only rule.
-- **Ran the real-browser checks and the spike**: the spike on Reddit/X in real Chrome and the release check in Chrome. ⚠ confirm both are done before submitting.
+- **Ran the real-browser checks and the spike**: the spike on Reddit/X in real Chrome, testing on YouTube, and the release check in Chrome. ⚠ confirm both are done before submitting.
 - **Designed the benchmark**: the cases, the method, what counts as blocked. I chose to compare other tools by their public store listings instead of screen-recording them.
 - **Made the video.** ⚠
 
@@ -90,3 +91,13 @@ Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding as
 - Drafts of the README and this page.
 
 Commits don't carry AI co-author trailers; AI use is disclosed here and in AI_LOG.md instead.
+
+## How I built this
+
+I'm a college student and still a beginner at coding, but I love building things and wanted to take part in hackathons instead of waiting until I "know enough". Strobeproof is the result of that enthusiasm.
+
+I chose the problem after reading about strobing GIFs being used to attack people with epilepsy. I researched the existing tools and the WCAG 2.3.1 flash rules, designed the approach (Calm Mode, test-first, an honest "can't check" state), made every design decision along the way, approved all 20 test answers (including catching that pure red is also a general flash), tested it in real Chrome and on YouTube, and made this video.
+
+Since I'm still learning, I built it with Claude Code as my pair programmer. It wrote most of the implementation, including the detection engine, which I reviewed, approved and can explain.
+
+The biggest thing I learned is that safety software has to be provable, not just plausible, which is why the project starts with a test suite. I'm leaving this hackathon understanding how flash detection works frame by frame, how browser extensions are structured, and why accessibility has to be designed in from the start. Next time, I want to write more of the code myself.

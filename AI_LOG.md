@@ -5,11 +5,12 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 ## The split
 
 **The project owner (me)**
-- Chose the idea and the approach. A verifiable flash detector: known-answer suite, benchmark, and Calm Mode by default. I wrote the build plan.
+- Chose the idea and the approach. A verifiable flash detector: known-answer suite, benchmark, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan.
+- Researched the existing tools and the WCAG 2.3.1 flash rules before the build. (The comparison table itself was compiled by Claude Code from the store listings; see below.)
 - Made every spec and design decision (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, the change from 4 to 5 transitions, Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - Wrote and approved the test answers (`core/__tests__/expected.json`, plan §4.5), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red rule.
 - Reviewed and approved `core/flashCounter.js` and `core/areaGrid.js`.
-- Ran the real-browser checks and the spike: the manual spike on Reddit/X and the release check in Chrome. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
+- Ran the real-browser checks and the spike: the manual spike on Reddit/X, testing on YouTube, and the release check in Chrome. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
 - Made the video.
 
 **Claude Code (AI assistant): the implementation**
@@ -46,3 +47,4 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 | Try a sample | Lab sample button + test | Specified it |
 | stub, then restore | Briefly replaced both files with stubs, then restored the AI drafts from `490f4a9` unchanged and relabelled them | Decided to keep the AI-drafted versions, reviewed and approved, and credit them as such |
 | comparison | Read the five store listings, wrote lab/comparison.json and the tables (benchmark page, README, Devpost) | Chose listing-based comparison over competitor recordings; chose the tools |
+| How I built this | Pasted the section into DEVPOST.md and aligned this file with it | Wrote the "How I built this" text |
