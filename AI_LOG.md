@@ -9,7 +9,7 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 - Made every spec and design decision (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, the change from 4 to 5 transitions, Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - Wrote and approved the test answers (`core/__tests__/expected.json`, plan §4.5), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red rule.
 - Reviewed and approved `core/flashCounter.js` and `core/areaGrid.js`.
-- Ran the real-browser checks, the spike and the benchmark: the manual spike on Reddit/X, the release check in Chrome, and the competitor recordings.
+- Ran the real-browser checks and the spike: the manual spike on Reddit/X and the release check in Chrome. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
 - Made the video.
 
 **Claude Code (AI assistant): the implementation**
@@ -19,6 +19,7 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 - The extension: service worker, content script, offscreen pre-scan, chips, popup, welcome tab.
 - The test harness: Vitest tests and the synthetic frame generators, built from my case list and answers, plus Playwright E2E, axe checks, latency and benchmark automation.
 - The spike kit and its automated probes.
+- Running the benchmark: the automated Strobeproof row (7/7 failing cases blocked), and the feature comparison table compiled from the other tools' public store listings.
 - The clip, benchmark and release scripts.
 - Scaffolding.
 - Drafts of README.md and DEVPOST.md.
@@ -38,9 +39,10 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 | `7bd525e` pre-scan | offscreen.js, cache, WebP header path | WebP fast-release rule (Decision C6) |
 | `42bd761` UX layer | popup, welcome, chip.css, demo feed, UX E2E | Plan §3.4–§3.6 UX spec |
 | `126ff12` latency | latency E2E + clip | Pre-trip design (plan A17) |
-| M8 benchmark | make-bench, recorder page, benchmark page, bench E2E, crop mode | Benchmark method (plan §6); competitor recordings pending |
+| M8 benchmark | make-bench, recorder page, benchmark page, bench E2E, crop mode | Benchmark method (plan §6) |
 | M9 ship | README, DEVPOST.md draft, release.mjs (zip writer), review fixes (chip Tab order, VideoDecoder leak) | Approved the expected.json lock, go-public, gated large bench size |
 | history rewrite | Ran git filter-repo as specified; verified dates; attribution settings | Decided: noreply email, no attribution trailers, go public |
 | pre-trip 4 → 5 | Constant change, 2 Hz / 2.5 Hz E2E, latency re-run | Decided the change |
 | Try a sample | Lab sample button + test | Specified it |
 | stub, then restore | Briefly replaced both files with stubs, then restored the AI drafts from `490f4a9` unchanged and relabelled them | Decided to keep the AI-drafted versions, reviewed and approved, and credit them as such |
+| comparison | Read the five store listings, wrote lab/comparison.json and the tables (benchmark page, README, Devpost) | Chose listing-based comparison over competitor recordings; chose the tools |

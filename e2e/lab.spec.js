@@ -66,9 +66,13 @@ test('WebM falls back to calm playback and still fails', async ({ page }) => {
   expect(text).toMatch(/Flashes too fast|Couldn't check every frame/);
 });
 
-test('benchmark page renders every bench case and is axe clean', async ({ page }) => {
+test('benchmark page: listing-based comparison + every bench case, axe clean', async ({ page }) => {
   await page.goto('/lab/benchmark.html');
   await expect(page.locator('#rows tr')).toHaveCount(18);
+  await expect(page.locator('#cmp-rows tr')).toHaveCount(14);
+  await expect(page.locator('#cmp-head th')).toHaveCount(7);
+  await expect(page.locator('#cmp-rows')).toContainText('7/7 blocked');
+  await expect(page.locator('#cmp-sources a')).toHaveCount(6);
   await expect(page.locator('#status')).toContainText('Strobeproof row measured');
   await axe(page);
 });

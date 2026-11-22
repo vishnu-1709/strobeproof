@@ -91,7 +91,32 @@ Mutation-checked: re-introducing the "darker side frozen" bug fails only #11; cl
 
 **Pre-trip latency** (live video, [`e2e/latency.json`](e2e/latency.json)): pre-trip fires at the 5th transition in a second. On an idle machine (12-run sets), Strobeproof set Calm Mode within about 11 ms before to 7 ms after the frame carrying that 5th transition was due on screen, so at most about one display frame of it shows (2.5 flashes). **Under heavy load** (the published run in [`e2e/latency.json`](e2e/latency.json), taken during the full E2E suite) 2 of 12 runs were late, by 51 ms and **155 ms**. In the 155 ms run the 6th transition also reached the screen: 6 transitions = 3 flashes, at the limit but not over it. Two other runs were already calm about 1 s early, after frame-skip pre-trips. Not zero, and not claimed as zero.
 
-**Benchmark** ([page](https://vishnu-1709.github.io/strobeproof/lab/benchmark.html), [method](lab/benchmark.html)): Strobeproof's own row is automated and frame-exact. **All 7 failing cases were blocked with 0 frames at normal brightness.** The 11 passing clips are only 3 s long: in the published run all of them were held calm, because headless Edge dropped 2+ frames in a row during warm-up, which (by design) restarts the 3 s quiet period. In an earlier run 6 of the 11 were released. Longer clips are released (E2E: 2 Hz and calm 6 s videos play at normal brightness). The exact-3 Hz cases err on the safe side in the live path. Competitor rows are recorded by hand (gated recorder, `bench/index.html?allowLarge=1`).
+**Benchmark** ([page](https://vishnu-1709.github.io/strobeproof/lab/benchmark.html), [method](lab/benchmark.html)): Strobeproof's own row is automated and frame-exact. **All 7 failing cases were blocked with 0 frames at normal brightness.** The 11 passing clips are only 3 s long: in the published run all of them were held calm, because headless Edge dropped 2+ frames in a row during warm-up, which (by design) restarts the 3 s quiet period. In an earlier run 6 of the 11 were released. Longer clips are released (E2E: 2 Hz and calm 6 s videos play at normal brightness). The exact-3 Hz cases err on the safe side in the live path.
+
+## How it compares
+
+<!-- comparison:start -->
+Other tools: only what each tool's public store listing states, checked 2026-11-22. "?" means the listing doesn't say. Strobeproof: this repo. Other tools weren't run through the benchmark.
+
+| Feature | **Strobeproof** | **NeuroShield** | **CogniShield** | **Seizafe** | **Epilepsy Blocker** | **PhotosensitivityPal** |
+|---|---|---|---|---|---|---|
+| Browser | Chrome, Edge, Brave | Chrome | Chrome | Chrome | Firefox | ? |
+| Works on | All sites (except ones you allow) | All websites | YouTube only | YouTube only | ? | ? |
+| Media covered | GIF, animated WebP, video | Video (GIFs: ?) | YouTube video | YouTube video | Animated GIFs | ? |
+| How flashing is detected | WCAG 2.3.1: ΔL ≥ 0.10, darker < 0.80, ≥ 7 transitions in any 1 s, per-pixel linear luminance in 32×18 tiles | WCAG 2.3.1: ΔL > 0.1, darker < 0.80, 1 s window; frames sampled at 15 fps, 32×32 | Rapid brightness changes in video frames; says it follows WCAG 2.3.1 (no numbers given) | ? ("an algorithm") | ? ("specialized algorithm" based on photosensitivity research) | ? |
+| Red-flash rule | Yes (WCAG red rule) | Yes (WCAG 2.3.2) | ? | ? | ? | ? |
+| Screen-area / region check | Yes: 25% of a 10° field, scaled to screen width | Yes: 4×4 grid of zones | ? | ? | ? | ? |
+| Checked or calmed before it's shown | Yes: unchecked media starts in Calm Mode; GIFs and GIF-style videos are decoded before release | ? (runs at document_start; overlay appears when flashing is detected) | ? (dims when flashing is detected) | Says it warns before flashing scenes (how: ?) | ? | ? |
+| What happens to flashing content | Calm Mode (grey, dimmed below the threshold) or hide; Keep Calm / Show original / Allow site | Overlay with Dim (30%) / Pause / Continue | Dims the video | Warning | Blocks the GIF | ? |
+| Cross-origin / DRM video | Shown in Calm Mode (can't flash) with "Play normally" | Cross-origin: opt-in CSS filter. DRM: ? | ? | ? | ? | ? |
+| Sensitivity settings | Standard / Extra careful | 4 levels (1+, 2+, 3+, 5+ flashes/s) | Auto-detect and sliders (flash-guard sensitivity: ?) | Sensitivity control | ? | ? |
+| Keyboard / screen reader | Yes: Tab/Enter/Esc, polite announcements, axe-core 0 violations | Yes: ARIA roles, keyboard (Esc), screen reader | ? | ? | ? | ? |
+| Published evidence | Public 20-case known-answer suite, latency and benchmark results | Claims 84 unit tests; published results: ? | ? | ? | ? | ? |
+| Strobeproof benchmark: failing cases blocked | 7/7 blocked, 0 frames at normal brightness | not tested | not tested | not tested | not tested | not tested |
+| Listing: version · updated · users | 1.0.0 · 2026-11-22 · – | 1.0.0 · 2026-04-13 · 40 | 1.0.0 · 2026-04-19 · 25 | 0.0.0.5 · 2025-01-31 · 244 | 1.0.41 · 2019-08-22 · 70 | ? |
+
+Sources: [Strobeproof](https://github.com/vishnu-1709/strobeproof) · [NeuroShield](https://chromewebstore.google.com/detail/neuroshield/dbmdhjhmfmdnohcphcmdlfaiipdoldfk) · [CogniShield](https://chromewebstore.google.com/detail/kmengpakcdmpcliojljfepdokneehmdn) · [Seizafe](https://chromewebstore.google.com/detail/goageegpmdbgenkgkhfhnnjmgmgboegi) · [Epilepsy Blocker](https://addons.mozilla.org/en-US/firefox/addon/epilepsy-blocker/) · [PhotosensitivityPal](https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh). The PhotosensitivityPal listing page showed no details when checked.
+<!-- comparison:end -->
 
 ## Limitations
 

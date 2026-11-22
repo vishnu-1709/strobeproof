@@ -19,7 +19,20 @@
 </div></header>
 <main id="main" class="wrap">
   <h1>Benchmark</h1>
-  <p class="lede">For every failing case: did above-threshold flashing reach the screen? For every passing case: was the clip released after checking, or held calm? Results are for specific tool versions on a specific date, judged by this project's own analyser. The method is below so anyone can repeat it.</p>
+  <p class="lede">Two parts. First, how Strobeproof compares with existing tools, using only what each tool's public store listing says. Second, Strobeproof's own measured result on the known-answer cases: for every failing case, did above-threshold flashing reach the screen? The method is below so anyone can repeat it.</p>
+
+  <h2 id="cmp-h">Feature comparison</h2>
+  <p class="hint" id="cmp-note"></p>
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="cmp-cap">
+    <table>
+      <caption id="cmp-cap" class="skip">Feature comparison of flash-protection tools, from their public store listings</caption>
+      <thead id="cmp-head"></thead>
+      <tbody id="cmp-rows"></tbody>
+    </table>
+  </div>
+  <p class="hint" id="cmp-sources"></p>
+
+  <h2>Strobeproof on the known-answer cases</h2>
   <p class="status" id="status" role="status">Loading results…</p>
 
   <div class="table-scroll" tabindex="0" role="region" aria-labelledby="bench-cap">
@@ -43,7 +56,7 @@
   <ol>
     <li>Clips: every suite case except 14 (variable frame rate can't be stored as a constant-rate file) and 15 (Strobeproof's own Calm Mode), encoded as constant-frame-rate MP4 by <code>tools/make-bench.mjs</code> straight from the synthetic frames. Each encoded clip is re-checked in the Lab and gives the locked answer (<code>e2e/bench-clips.spec.js</code>).</li>
     <li><strong>Strobeproof</strong>: automated in headless Edge with the extension loaded. Each clip plays as a normal video at 160×90 px in a 160 px-wide window, which is exactly the 1024×576 reference display. Every presented frame records whether the clip was at normal brightness (<code>e2e/bench-self.spec.js</code>). No human watches; nothing is recorded.</li>
-    <li><strong>Other tools</strong>: one fresh browser profile per tool, its default settings, the same recorder page (<code>bench/index.html</code>), a 60 fps screen recording. The person recording lowers their brightness and looks away. Each recording is cropped to the clip region and checked in the Lab. A case counts as "reached" if the cropped recording fails WCAG 2.3.1 during that case's time slot.</li>
+    <li><strong>Other tools</strong> were not run through the benchmark. The comparison above uses only their public store listings, checked on the date shown; "?" means the listing doesn't say.</li>
   </ol>
   <p class="hint">Known limit of the live path: at exactly 3 flashes per second (cases 3a–3d) Strobeproof can err on the safe side when the browser skips frames, because each change is seen up to a frame late. GIFs and pre-scanned videos are decoded frame by frame and are exact.</p>
 </main>
@@ -73,6 +86,20 @@
     }
     rows.append(tr);
   }
+  const cmp = await fetch('comparison.json', { cache: 'no-store' }).then((r) => r.json());
+  const chr = document.createElement('tr');
+  for (const t of ['Feature', ...cmp.tools.map((t) => t.name)]) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = t; chr.append(th); }
+  document.getElementById('cmp-head').append(chr);
+  for (const [k, label] of cmp.rows) {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th'); th.scope = 'row'; th.textContent = label; tr.append(th);
+    for (const t of cmp.tools) { const td = document.createElement('td'); td.textContent = t[k]; tr.append(td); }
+    document.getElementById('cmp-rows').append(tr);
+  }
+  document.getElementById('cmp-note').textContent = `Other tools: only what each public store listing states, checked ${cmp.checked}. "?" means the listing doesn't say.`;
+  const src = document.getElementById('cmp-sources');
+  src.append('Sources: ');
+  cmp.tools.forEach((t, i) => { const a = document.createElement('a'); a.href = t.source; a.textContent = `${t.name} (${t.sourceLabel})`; src.append(a, i < cmp.tools.length - 1 ? ' · ' : '.'); });
   const sp = bench.tools.find((t) => t.name === 'Strobeproof');
   document.getElementById('status').textContent = sp?.date ? `Strobeproof row measured on ${sp.date}. ${bench.status}.` : bench.status;
 </script>
