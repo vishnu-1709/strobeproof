@@ -46,6 +46,8 @@
 - Conventional commits: `feat(core): …`, `feat(ext): …`, `feat(lab): …`, `test: …`, `fix: …`, `docs: …`, `chore: …`. Each body ends with `Milestone: M#`.
 - Never commit secrets, `.env`, `node_modules`, large binaries (> 5 MB) or failing-clip recordings. Generated clips are gitignored and regenerated with `tools/make-clips.mjs`.
 - **Never** force-push, rewrite pushed history, delete branches or tags, or change repo visibility without asking.
+- Do not add Co-Authored-By or Claude attribution lines to commits or PRs. (AI use is disclosed in AI_LOG.md and on Devpost instead.)
+- Never edit `core/flashCounter.js` or `core/areaGrid.js` again: the human writes them by hand (EvoHacks AI rule).
 - Tag each finished milestone: `git tag m#-done && git push --tags`.
 
 **Reporting**
