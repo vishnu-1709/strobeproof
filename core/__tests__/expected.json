@@ -1,5 +1,5 @@
 {
-  "_note": "LOCKED. Known answers from plan §4.5. Claude Code may not edit this file. Human-approved on: PENDING",
+  "_note": "LOCKED. Known answers from plan §4.5. Claude Code may not edit this file. Human-approved on: 2026-11-22",
   "cases": {
     "1":   { "verdict": "PASS" },
     "2":   { "verdict": "FAIL", "general": true },
