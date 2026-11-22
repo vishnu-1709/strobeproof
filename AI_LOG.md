@@ -6,6 +6,10 @@ What Claude Code wrote vs what the human wrote or decided, per commit. This goes
 |---|---|---|
 | `1da101c` chore: clear repo | Removal commit | Decided to reset the repo and start fresh |
 | scaffold | `CLAUDE.md` (assembled verbatim from plan §7.1 + master prompt §2), `PROGRESS.md`, `AI_LOG.md`, `.gitignore` | Wrote the build plan and master prompt (copied into the repo unchanged) |
+| `7b35605` M0 spike kit | Spike extension, Playwright runner | Defined the five spike questions (plan) |
+| `71fdae1` core groundwork | constants.js transcribed from plan §4.1, fixtures, luminance, analyzer, decoders, tests | Constants and test cases specified in the plan |
+| `c4ef749` flashCounter + areaGrid | Both files, written pair-style on explicit delegation from the human's §4.3/§4.4 pseudocode (★ lines marked) | Delegated the files and is annotating them; reviewed expected.json and added case 9b plus the case-9 general assertion; chose linear RGB for the red rule |
+| `c025d2f` spike results | Ran the automated spike, wrote SPIKE.md | Reddit/X manual run pending |
 | `6128c8e` Lab | Lab pages, worker, clip generator, server, Lab E2E | – |
 | `4125176` extension core | manifest, calm.css, sw.js, content.js, settings, chips | Plan design (Calm by default, pre-trip, states) |
 | `961c22b` pre-scan | offscreen.js, cache, WebP header path | WebP fast-release rule (Decision C6) |
