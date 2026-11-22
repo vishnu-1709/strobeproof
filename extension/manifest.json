@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Strobeproof",
+  "version": "1.0.0",
+  "description": "Reduces exposure to flashing GIFs and videos. Unchecked media starts calm; checked media plays normally.",
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "offscreen", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "sw.js", "type": "module" },
+  "action": { "default_title": "Strobeproof", "default_popup": "popup.html" },
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "commands": {
+    "calm-page": {
+      "suggested_key": { "default": "Alt+Shift+F" },
+      "description": "Calm everything on this page now (press again to restore)"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["core/*.js", "core/decode/*.js", "vendor/mp4box/*.mjs", "settings.js", "chip.css"],
+      "matches": ["<all_urls>"],
+      "use_dynamic_url": false
+    }
+  ]
+}

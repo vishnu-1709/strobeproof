@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof E2E media page</title>
+<style>
+  /* Safety: every clip ≤ 160 px. The extension's Calm Mode starts them dimmed. */
+  body { margin: 16px; font: 16px system-ui, sans-serif; background: #fff; color: #111; }
+  video, img { width: 160px; height: 90px; display: block; margin: 8px 0; background: #000; }
+  .spacer { height: 2400px; }
+</style>
+</head>
+<body>
+<h1>Media test page</h1>
+<div id="root"></div>
+<script>
+  // ?v=clip.mp4&opts=autoplay,loop,muted,cross,shadow,controls  ?img=clip.gif&opts=cross,far
+  const q = new URLSearchParams(location.search);
+  const opts = new Set((q.get('opts') || '').split(',').filter(Boolean));
+  const base = opts.has('cross') ? 'http://127.0.0.1:8643/clips/' : '/clips/';
+  const root = document.getElementById('root');
+  let host = root;
+  if (opts.has('shadow')) {
+    customElements.define('fake-player', class extends HTMLElement {});
+    const fp = document.createElement('fake-player');
+    root.append(fp);
+    host = fp.attachShadow({ mode: 'closed' });
+  }
+  if (opts.has('far')) { const s = document.createElement('div'); s.className = 'spacer'; root.append(s); }
+  for (const v of (q.get('v') || '').split(',').filter(Boolean)) {
+    const el = document.createElement('video');
+    el.src = base + v; el.width = 160; el.height = 90; el.playsInline = true; el.preload = 'auto';
+    if (opts.has('muted')) { el.muted = true; el.defaultMuted = true; el.setAttribute('muted', ''); }
+    if (opts.has('loop')) el.loop = true;
+    if (opts.has('autoplay')) el.autoplay = true;
+    if (opts.has('controls')) el.controls = true;
+    el.dataset.clip = v;
+    host.append(el);
+  }
+  for (const i of (q.get('img') || '').split(',').filter(Boolean)) {
+    const el = document.createElement('img');
+    el.src = base + i; el.alt = 'test image ' + i; el.width = 160; el.height = 90; el.dataset.clip = i;
+    host.append(el);
+  }
+  // Test hooks (main world): read state through attributes only.
+  window.__state = (sel = 'video, img') => [...(host.querySelectorAll ? host.querySelectorAll(sel) : [])].map((e) => ({ clip: e.dataset.clip, fg: e.dataset.fg || null, filter: getComputedStyle(e).filter }));
+  window.__play = () => Promise.all([...host.querySelectorAll('video')].map((v) => v.play()));
+</script>
+</body>
+</html>

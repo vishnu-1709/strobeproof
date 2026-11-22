@@ -1,0 +1,10 @@
+/* Registered at document_start by sw.js (dynamic, so allowlisted sites never get it).
+   Unchecked media starts in Calm Mode; content.js releases items once verified (plan §3.1, A6).
+   The filter value must equal CALM_FILTER in core/constants.js (enforced by drift.test.js). */
+video:not([data-fg="safe"]):not([data-fg="allow"]):not([data-fg="hide"]),
+img:is([src*=".gif" i],[src*=".webp" i],[srcset*=".gif" i],[srcset*=".webp" i],[src*="format=gif" i]):not([data-fg="safe"]):not([data-fg="allow"]):not([data-fg="hide"]) {
+  filter: grayscale(1) brightness(0.32) !important;
+}
+video[data-fg="hide"], img[data-fg="hide"] {
+  filter: brightness(0) !important;
+}

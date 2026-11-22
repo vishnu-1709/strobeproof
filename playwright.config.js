@@ -15,9 +15,9 @@ export default defineConfig({
     screenshot: 'off',
     viewport: { width: 480, height: 800 },
   },
-  webServer: {
-    command: 'node tools/serve.mjs 8642',
-    url: 'http://localhost:8642/lab/index.html',
-    reuseExistingServer: true,
-  },
+  webServer: [
+    { command: 'node tools/serve.mjs 8642', url: 'http://localhost:8642/lab/index.html', reuseExistingServer: true },
+    // Second origin for cross-origin (tainted canvas) tests.
+    { command: 'node tools/serve.mjs 8643', url: 'http://127.0.0.1:8643/lab/index.html', reuseExistingServer: true },
+  ],
 });

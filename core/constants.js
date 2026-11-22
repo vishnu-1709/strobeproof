@@ -51,6 +51,11 @@ export const SAMPLE_H = 72;
 export const TILES_X = 32;
 export const TILES_Y = 18;
 
+/**
+ * Feature flag: pre-scan short muted looping/autoplay <video> ("GIF-videos") before release (plan A5).
+ * ON by default; flip to false if the M0 spike ② shows X/Reddit CDNs aren't fetchable (Decision 2026-11-22).
+ */
+export const GIF_VIDEO_PRESCAN = true;
 /** Pre-scan limits for GIF-style videos (plan §3.2). */
 export const PRESCAN_MAX_DURATION_S = 30;
 export const PRESCAN_MAX_BYTES = 15 * 1024 * 1024;
