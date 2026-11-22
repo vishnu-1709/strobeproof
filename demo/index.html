@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof Demo Feed</title>
+<meta name="description" content="A safe demo feed that shows every Strobeproof state. Flashing items are always kept dim by this page itself.">
+<link rel="stylesheet" href="../lab/lab.css">
+<style>
+  .feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .post { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .post h2 { font-size: 1.05rem; margin: 0 0 6px; }
+  .post p { margin: 6px 0 0; }
+  .media { width: 160px; height: 90px; display: block; background: #000; margin: 10px 0 0; }
+  /* SAFETY: this page keeps every flashing item in Calm Mode itself, with or without the extension. */
+  .media.flashes { filter: grayscale(1) brightness(0.32) !important; }
+  .state { font-weight: 600; }
+  .expect { color: var(--muted); font-size: 0.925rem; }
+  .banner { border-radius: 10px; padding: 14px 16px; margin: 0 0 20px; border: 2px solid var(--line); background: var(--info-bg); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site"><div class="wrap">
+  <a class="brand" href="../lab/index.html">Strobeproof</a>
+  <nav aria-label="Pages"><ul>
+    <li><a href="index.html" aria-current="page">Demo feed</a></li>
+    <li><a href="../lab/index.html">Lab</a></li>
+    <li><a href="../lab/suite.html">Test suite</a></li>
+  </ul></nav>
+</div></header>
+<main id="main" class="wrap">
+  <h1>Demo feed</h1>
+  <p class="lede">Install the extension, then open this page to see every state. <strong>Nothing here flashes brightly:</strong> items that flash are kept dim and grey by this page itself, even without the extension.</p>
+  <p class="banner" id="ext" role="status">Checking whether Strobeproof is running…</p>
+
+  <div class="feed" id="feed"></div>
+</main>
+<footer class="site"><div class="wrap">Strobeproof reduces exposure; it is not a medical device. All media on this page are tiny synthetic test clips.</div></footer>
+
+<script>
+  const posts = [
+    { title: 'A slow, calm GIF', kind: 'img', src: 'media/safe-1hz.gif', expect: 'Checked and shown normally. No label.' },
+    { title: 'A GIF that flashes 5 times a second', kind: 'img', src: 'media/flash-5hz.gif', flashes: true, expect: 'Kept calm, with a label and three choices.' },
+    { title: 'A still photo (WebP)', kind: 'img', src: 'media/still.webp', expect: 'Released almost instantly. No label.' },
+    { title: 'An animated WebP that flashes', kind: 'img', src: 'media/flash-5hz.webp', flashes: true, expect: 'Kept calm.' },
+    { title: 'A looping, muted "GIF-style" video that flashes', kind: 'video', src: 'media/flash-5hz.mp4', gif: true, flashes: true, expect: 'Checked before it is ever shown brightly, then kept calm.' },
+    { title: 'A looping, muted "GIF-style" video that is calm', kind: 'video', src: 'media/calm-fade.mp4', gif: true, expect: 'Checked, then shown normally.' },
+    { title: 'A normal video (not playing)', kind: 'video', src: 'media/calm-fade.mp4', expect: 'Never darkened while paused. Press play: calm for 2 seconds while checked, then normal.' },
+    { title: 'A video that flashes when you play it', kind: 'video', src: 'media/flash-5hz.mp4', flashes: true, expect: 'Press play: it stays calm and is marked as flashing.' },
+    { title: 'A video from another website', kind: 'video', src: crossSrc(), cross: true, expect: 'Can\'t be checked, so it plays in Calm Mode with a "Play normally" choice.' },
+  ];
+  // A copy of a calm clip on a different origin (no CORS on <video>), so the browser won't let anyone read its pixels.
+  function crossSrc() {
+    const h = location.hostname;
+    if (h.endsWith('.github.io')) return `https://cdn.jsdelivr.net/gh/${h.split('.')[0]}/strobeproof@main/demo/media/calm-fade.mp4`;
+    return 'http://127.0.0.1:8643/demo/media/calm-fade.mp4'; // local second origin (tools/serve.mjs 8643)
+  }
+  const STATE = {
+    checking: 'Checking…', calm: 'Calmed (possible flashing)', risky: 'Flashing found: kept calm', hide: 'Flashing found: hidden',
+    cant: 'Can\'t be checked: shown calm', safe: 'Checked: shown normally', allow: 'Original shown (your choice)',
+  };
+  const feed = document.getElementById('feed');
+  const items = [];
+  posts.forEach((p, i) => {
+    const art = document.createElement('article'); art.className = 'post'; art.setAttribute('aria-labelledby', 'p' + i);
+    const h = document.createElement('h2'); h.id = 'p' + i; h.textContent = p.title; art.append(h);
+    let m;
+    if (p.kind === 'img') { m = document.createElement('img'); m.alt = p.title; }
+    else {
+      m = document.createElement('video'); m.playsInline = true; m.preload = 'metadata';
+      if (p.gif) { m.muted = true; m.defaultMuted = true; m.loop = true; m.autoplay = true; m.setAttribute('muted', ''); }
+      else { m.controls = true; m.muted = true; }
+      m.setAttribute('aria-label', p.title);
+    }
+    m.className = 'media' + (p.flashes ? ' flashes' : '');
+    m.width = 160; m.height = 90; m.src = p.src;
+    art.append(m);
+    const st = document.createElement('p'); st.className = 'state'; st.textContent = 'Strobeproof: not running'; art.append(st);
+    const ex = document.createElement('p'); ex.className = 'expect'; ex.textContent = 'Expected: ' + p.expect; art.append(ex);
+    if (p.flashes) { const n = document.createElement('p'); n.className = 'expect'; n.textContent = 'This demo never shows the original, even if you choose "Show original".'; art.append(n); }
+    feed.append(art);
+    items.push({ m, st });
+  });
+  // Status text is polled (no animation); aria-live stays off to keep screen readers quiet.
+  setInterval(() => {
+    const on = document.documentElement.dataset.strobeproof === 'on';
+    document.getElementById('ext').textContent = on
+      ? 'Strobeproof is running on this page. Each post says what it decided.'
+      : 'Strobeproof isn\'t running here yet. Install it, then reload this page. Flashing items stay dim either way.';
+    for (const { m, st } of items) st.textContent = 'Strobeproof: ' + (on ? (STATE[m.dataset.fg] || 'waiting') : 'not running');
+  }, 400);
+</script>
+</body>
+</html>

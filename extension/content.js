@@ -302,7 +302,7 @@
       if (window.top !== window && !document.fullscreenElement) { /* frames announce too; fine */ }
       if (!liveHost) {
         liveHost = document.createElement('strobeproof-live');
-        const sr = liveHost.attachShadow({ mode: 'closed' });
+        const sr = liveHost.attachShadow({ mode: 'open' });
         liveEl = document.createElement('div');
         liveEl.setAttribute('aria-live', 'polite');
         liveEl.setAttribute('role', 'status');

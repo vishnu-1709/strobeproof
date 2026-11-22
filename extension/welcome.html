@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Strobeproof</title>
+<link rel="stylesheet" href="ui.css">
+<style>
+  body { padding: 32px 16px 48px; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.75rem; margin-bottom: 12px; }
+  .lede { font-size: 1.125rem; max-width: 60ch; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+  figure { margin: 0; }
+  figure svg { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); display: block; }
+  figcaption { margin-top: 6px; font-weight: 600; }
+  figcaption span { display: block; font-weight: 400; color: var(--muted); }
+  .calm svg { filter: grayscale(1) brightness(0.32); }
+  .key { background: var(--surface); border-radius: 10px; padding: 14px 16px; margin: 0 0 24px; }
+  kbd { font: 600 0.95rem ui-monospace, Consolas, monospace; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; background: var(--bg); }
+  details { border: 1px solid var(--line); border-radius: 10px; padding: 0 16px; margin: 0 0 24px; }
+  summary { min-height: 44px; display: flex; align-items: center; font-weight: 600; cursor: pointer; }
+  details ul { margin: 0 0 14px; padding-left: 20px; }
+  details li { margin: 6px 0; }
+  .got { min-width: 160px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Strobeproof is on</h1>
+  <p class="lede">It checks GIFs and videos for fast flashing before you see them at full brightness. Anything it hasn't checked yet is shown in Calm Mode: dimmed and grey, so it can't flash brightly.</p>
+
+  <div class="pair">
+    <figure>
+      <svg viewBox="0 0 320 180" role="img" aria-labelledby="n-t"><title id="n-t">A bright, colourful picture as it normally looks</title>
+        <rect width="320" height="180" fill="#7cc4f0"/><circle cx="252" cy="44" r="24" fill="#ffd34d"/>
+        <path d="M0 140 L70 80 L130 130 L190 70 L260 125 L320 95 L320 180 L0 180Z" fill="#3f8f4f"/>
+        <rect x="0" y="150" width="320" height="30" fill="#2e6b3a"/></svg>
+      <figcaption>Normal<span>Checked and safe: shown as usual, with no labels.</span></figcaption>
+    </figure>
+    <figure class="calm">
+      <svg viewBox="0 0 320 180" role="img" aria-labelledby="c-t"><title id="c-t">The same picture in Calm Mode: dim and grey</title>
+        <rect width="320" height="180" fill="#7cc4f0"/><circle cx="252" cy="44" r="24" fill="#ffd34d"/>
+        <path d="M0 140 L70 80 L130 130 L190 70 L260 125 L320 95 L320 180 L0 180Z" fill="#3f8f4f"/>
+        <rect x="0" y="150" width="320" height="30" fill="#2e6b3a"/></svg>
+      <figcaption>Calm Mode<span>Not checked yet, can't be checked, or flashing.</span></figcaption>
+    </figure>
+  </div>
+
+  <div class="key">
+    <p><strong>One shortcut to remember:</strong> <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> calms everything on the page. Press it again to restore.</p>
+    <p style="margin:0">On any calmed item, you can choose <em>Keep Calm</em>, <em>Show original</em>, or <em>Always allow this site</em>. <kbd>Esc</kbd> always takes you back to Calm.</p>
+  </div>
+
+  <details id="limits">
+    <summary>What it can't check</summary>
+    <ul>
+      <li>Games and drawings made with canvas, page animations, and animated backgrounds.</li>
+      <li>Some videos can't be read (for example protected films or videos from other sites). These stay in Calm Mode unless you choose to play them normally.</li>
+      <li>Normal videos are watched as they play. If flashing starts, it switches to Calm Mode within a fraction of a second, not instantly.</li>
+      <li>Very bright HDR screens can show brighter than Calm Mode expects.</li>
+      <li>Everyone is different. The limits follow the web's flash-safety guideline for a typical screen and distance.</li>
+      <li>It reduces exposure. It is not a medical device and can't catch everything.</li>
+    </ul>
+  </details>
+
+  <p class="hint">Works in Chrome, Edge and Brave. Strobeproof has no server and no account: everything is checked on this computer.</p>
+  <button class="got" id="got">Got it</button>
+</main>
+<script src="welcome.js"></script>
+</body>
+</html>

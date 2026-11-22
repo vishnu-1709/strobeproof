@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Strobeproof</title>
+<link rel="stylesheet" href="ui.css">
+<style>
+  body { width: 360px; padding: 14px 16px 12px; }
+  header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  header img { width: 32px; height: 32px; }
+  .power { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .power strong { font-size: 1.1rem; display: block; }
+  .switch { min-width: 96px; }
+  .switch[aria-checked="false"] { background: transparent; color: var(--accent); }
+  .wide { width: 100%; margin-bottom: 6px; }
+  .count { color: var(--muted); margin: 4px 0 12px; }
+  ul.allow { list-style: none; margin: 4px 0 0; padding: 0; }
+  ul.allow li { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-bottom: 1px solid var(--line); }
+  ul.allow li span { overflow-wrap: anywhere; }
+  .confirm { border: 2px solid var(--accent); border-radius: 10px; padding: 10px 12px; margin: 0 0 12px; background: var(--surface); }
+  .confirm .row { display: flex; gap: 8px; margin-top: 8px; }
+  footer { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 6px; }
+  footer p { font-size: 0.925rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header><img src="icons/32.png" alt=""><h1>Strobeproof</h1></header>
+<main>
+  <div id="confirm" class="confirm" hidden role="alertdialog" aria-modal="false" aria-labelledby="confirm-text">
+    <p id="confirm-text"></p>
+    <div class="row"><button id="confirm-cancel" class="secondary">Cancel</button><button id="confirm-ok">Change it</button></div>
+  </div>
+
+  <div class="power">
+    <div><strong id="power-label">Protection is on</strong><span class="hint" id="power-hint">Unchecked GIFs and videos start calm.</span></div>
+    <button id="power" class="switch" role="switch" aria-checked="true" aria-labelledby="power-label">On</button>
+  </div>
+  <button id="calm-page" class="wide">Calm this page now</button>
+  <p class="hint">Shortcut: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> calms the whole page. Press it again to restore.</p>
+  <p class="count" id="count" aria-live="off"></p>
+
+  <fieldset>
+    <legend>How careful should it be?</legend>
+    <div class="radio"><input type="radio" name="mode" id="mode-strict" value="strict"><label for="mode-strict">Standard<span class="hint">Calms flashing that breaks the web's safety guideline (more than 3 flashes a second).</span></label></div>
+    <div class="radio"><input type="radio" name="mode" id="mode-comfort" value="comfort"><label for="mode-comfort">Extra careful<span class="hint">Calms sooner, from about 2 flashes a second. Not a medical standard.</span></label></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>When flashing is found</legend>
+    <div class="radio"><input type="radio" name="onRisk" id="risk-calm" value="calm"><label for="risk-calm">Show it calm<span class="hint">Dimmed and grey, so it can't flash brightly.</span></label></div>
+    <div class="radio"><input type="radio" name="onRisk" id="risk-hide" value="hide"><label for="risk-hide">Hide it<span class="hint">Blacked out and paused.</span></label></div>
+  </fieldset>
+
+  <div class="check"><input type="checkbox" id="freeze"><label for="freeze">Freeze all GIFs<span class="hint">Show only the first picture.</span></label></div>
+  <div class="check"><input type="checkbox" id="lock"><label for="lock">Lock these settings<span class="hint">For caregivers: every change, and every "Show original", needs a second step.</span></label></div>
+
+  <h2 id="allow-h" style="margin-top:10px">Sites you allow</h2>
+  <p class="hint" id="allow-empty">None. Strobeproof works on every site.</p>
+  <ul class="allow" id="allow" aria-labelledby="allow-h"></ul>
+</main>
+<footer>
+  <p>Reduces exposure to flashing that breaks the web's flash-safety guideline. Not a medical device. It can't catch everything.</p>
+  <button class="link" id="limits">What it can't check</button>
+</footer>
+<script type="module" src="popup.js"></script>
+</body>
+</html>
