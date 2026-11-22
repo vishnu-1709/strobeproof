@@ -13,7 +13,7 @@ const headed = process.argv.includes('--headed');
 const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sp-spike-'));
 
 const ctx = await chromium.launchPersistentContext(userDataDir, {
-  channel: 'chromium',
+  channel: process.env.SP_CHANNEL || 'msedge', // Chrome 137+ ignores --load-extension; bundled Chromium is blocked on this machine
   headless: !headed,
   viewport: { width: 1280, height: 800 },
   args: [`--disable-extensions-except=${ext}`, `--load-extension=${ext}`, '--autoplay-policy=no-user-gesture-required'],
