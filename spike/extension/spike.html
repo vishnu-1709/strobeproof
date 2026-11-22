@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Strobeproof spike</title>
+<style>
+  body { font: 14px/1.4 system-ui, sans-serif; width: 420px; margin: 12px; background: #fff; color: #111; }
+  button { min-height: 44px; min-width: 44px; padding: 0 12px; margin: 4px 0; font: inherit; }
+  button:focus-visible { outline: 3px solid #1a4fa0; outline-offset: 2px; }
+  pre { white-space: pre-wrap; word-break: break-all; font-size: 11px; background: #f4f4f4; padding: 8px; max-height: 360px; overflow: auto; }
+  * { animation: none !important; transition: none !important; }
+</style>
+<h1 style="font-size:16px">Spike kit</h1>
+<p>Open the page you want to test (YouTube watch page, X post with a GIF, Reddit post with a GIF/video), let the video start, then:</p>
+<button id="probe">Probe this tab (①②③)</button>
+<button id="calm">Open Calm + fullscreen test (④⑤)</button>
+<button id="copy">Copy results</button>
+<pre id="out" aria-live="polite">No results yet.</pre>
+<script src="spike.js" type="module"></script>
+</html>

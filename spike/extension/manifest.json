@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Strobeproof Spike Kit",
+  "version": "0.0.1",
+  "description": "Throwaway probes for the M0 spike. Not the product; uses extra permissions (tabs) only for captureVisibleTab.",
+  "permissions": ["offscreen", "tabs", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "sw.js", "type": "module" },
+  "action": { "default_title": "Strobeproof spike", "default_popup": "spike.html" },
+  "content_scripts": [
+    { "matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_idle" }
+  ]
+}

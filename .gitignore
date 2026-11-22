@@ -18,3 +18,4 @@ playwright-report/
 coverage/
 dist/
 *.zip
+spike/results.json

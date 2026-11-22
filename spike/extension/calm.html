@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Spike ④⑤ Calm measurement</title>
+<style>
+  html, body { margin: 0; background: #000; color: #ddd; font: 14px/1.4 system-ui, sans-serif; }
+  * { animation: none !important; transition: none !important; }
+  .row { display: flex; gap: 8px; padding: 8px; }
+  .sw { width: 120px; height: 120px; }
+  .calm { filter: grayscale(1) brightness(0.32); }
+  button { min-height: 44px; padding: 0 12px; font: inherit; margin: 8px; }
+  button:focus-visible { outline: 3px solid #8ab4ff; outline-offset: 2px; }
+  pre { white-space: pre-wrap; padding: 8px; font-size: 12px; }
+  video { width: 160px; height: 90px; background: #000; }
+</style>
+<div class="row" id="swatches">
+  <div class="sw" id="w"     style="background:#fff" title="white, no filter"></div>
+  <div class="sw calm" id="wc" style="background:#fff" title="white, calm"></div>
+  <div class="sw calm" id="rc" style="background:#f00" title="red, calm"></div>
+  <div class="sw calm" id="gc" style="background:#808080" title="grey 128, calm"></div>
+</div>
+<div class="row"><video id="v" class="calm" muted playsinline></video></div>
+<button id="measure">④ Measure Calm (captureVisibleTab)</button>
+<button id="fs">⑤ Fullscreen the calm video and measure</button>
+<pre id="out" aria-live="polite">Click ④ first. Do not move the window while it captures.</pre>
+<script src="calm.js" type="module"></script>
+</html>
