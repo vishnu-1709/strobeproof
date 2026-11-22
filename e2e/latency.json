@@ -1,0 +1,20 @@
+{
+  "runs": 10,
+  "worst_ms": -6.4,
+  "median_ms": -9.5,
+  "all_ms": [
+    -6.4,
+    -10.9,
+    -11.4,
+    -10.1,
+    -11.6,
+    -9.5,
+    -7.6,
+    -7.2,
+    -9.2,
+    -10.1
+  ],
+  "browser": "Microsoft Edge (Chromium), headless, Playwright",
+  "clip": "late-flash.mp4, 30 fps, 5 Hz from 3.0 s",
+  "date": "2026-11-22"
+}

@@ -61,6 +61,16 @@ encode('safe-1hz.gif', 10, squareFrames(10, 2, 2, BLACK, WHITE), gif);
 encode('flash-5hz.webp', 20, squareFrames(20, 2, 10, BLACK, WHITE), awebp);
 encode('still.webp', 1, squareFrames(1, 1, 0, GREY, GREY), ['-c:v', 'libwebp', '-frames:v', '1']);
 encode('still.gif', 1, squareFrames(1, 1, 0, GREY, GREY), ['-frames:v', '1']);
+// Latency clip (plan §3.3): 3 s steady grey (gets released), then 5 Hz black/white from frame 90.
+// Transitions at 3.0 (grey→black), 3.1, 3.2, 3.3 s … so the 4th transition is the frame at 3.3 s.
+encode('late-flash.mp4', 30, (() => {
+  const n = 30 * 6, buf = Buffer.alloc(n * W * H * 3);
+  for (let i = 0; i < n; i++) {
+    const c = i < 90 ? GREY : (Math.floor((i - 90) / 3) % 2 ? WHITE : BLACK);
+    for (let p = 0; p < W * H; p++) buf.set(c, (i * W * H + p) * 3);
+  }
+  return buf;
+})(), mp4);
 // A long, safe, slowly changing clip for "live video" demos (no flashing at all).
 encode('calm-fade.mp4', 30, (() => {
   const n = 30 * 6, buf = Buffer.alloc(n * W * H * 3);
