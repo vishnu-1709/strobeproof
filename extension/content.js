@@ -92,8 +92,26 @@
       if (c.state !== 'checking' || !c.src || !/^https?:|^data:|^blob:/.test(c.src)) return;
       if (tooSmallToFail(c.el)) return setState(c, 'safe', { reason: 'small' });
       const cached = await cacheGet(c.src);
-      if (cached) return applyVerdict(c, cached);
+      if (cachedFits(c, cached)) return applyVerdict(c, cached);
+      if (/^(blob|data):/.test(c.src)) return localImageScan(c);
       queue.push(c); pump();
+    }
+    // A cached verdict holds if it doesn't depend on size, or the item isn't shown larger than when it was checked.
+    const cachedFits = (c, v) => !!v && (v.sizeIndependent || v.verdict === 'FAIL' || refArea(c.el) <= (v.rectArea || 0) * 1.25);
+
+    // blob:/data: images belong to the page's origin, so the offscreen doc can't fetch them; decode here instead.
+    async function localImageScan(c) {
+      try {
+        const [{ decodeAnimatedImage, sniffImageType }] = await Promise.all([import(url('core/decode/gif.js'))]);
+        const buf = await (await fetch(c.src)).arrayBuffer();
+        const type = sniffImageType(new Uint8Array(buf, 0, 16));
+        if (!type) return setState(c, 'cant', { reason: 'unsupported' });
+        const r = await decodeAnimatedImage(buf, type);
+        if (!r.animated) return applyVerdict(c, { verdict: 'STATIC' });
+        const rect = c.el.getBoundingClientRect();
+        const rep = AN.analyzeFrames(r.frames, { displayWidth: rect.width, displayHeight: rect.height, viewportWidth: innerWidth, incomplete: r.incomplete });
+        applyVerdict(c, { verdict: rep.verdict, flashesPerSecond: rep.worst.flashesPerSecond });
+      } catch (e) { setState(c, 'cant', { reason: String(e?.message || e) }); }
     }
     function pump() {
       while (inflight < PRESCAN_CONCURRENCY && queue.length) {
@@ -101,7 +119,11 @@
         if (c.state !== 'checking') continue;
         inflight++;
         const src = c.src;
-        send({ type: 'prescan', job: { url: src, kind: c.kind === 'img' ? 'image' : 'video', freeze: settings.freezeGifs && c.kind === 'img' } })
+        const r = c.el.getBoundingClientRect();
+        const job = { url: src, kind: c.kind === 'img' ? 'image' : 'video', freeze: settings.freezeGifs && c.kind === 'img',
+          rect: { width: Math.max(1, r.width), height: Math.max(1, r.height) }, viewportWidth: innerWidth };
+        c.prescanStarted = performance.now();
+        send({ type: 'prescan', job })
           .then((v) => { if (v && !v.error && v.verdict !== 'ERROR') cacheSet(src, v); if (c.src === src || c.kind === 'video') applyVerdict(c, v); })
           .finally(() => { inflight--; pump(); });
       }
@@ -156,7 +178,7 @@
       if (!C.GIF_VIDEO_PRESCAN || c.prescan || !isGifLikeVideo(c.el)) return;
       c.prescan = 'pending';
       c.src = c.el.currentSrc || c.el.src || c.el.querySelector('source')?.src;
-      cacheGet(c.src).then((cached) => { if (cached) applyVerdict(c, cached); else { queue.push(c); pump(); } });
+      cacheGet(c.src).then((cached) => { if (cachedFits(c, cached)) applyVerdict(c, cached); else { queue.push(c); pump(); } });
     }
 
     function onPlay(c) {

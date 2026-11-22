@@ -38,11 +38,29 @@
     el.dataset.clip = v;
     host.append(el);
   }
+  const n = +(q.get('n') || 1);
+  const [sw, sh] = (q.get('size') || '160x90').split('x').map(Number);
   for (const i of (q.get('img') || '').split(',').filter(Boolean)) {
-    const el = document.createElement('img');
-    el.src = base + i; el.alt = 'test image ' + i; el.width = 160; el.height = 90; el.dataset.clip = i;
-    host.append(el);
+    for (let k = 0; k < n; k++) {
+      const el = document.createElement('img');
+      el.src = base + i + (n > 1 ? `?k=${k}` : ''); el.alt = 'test image ' + i; el.width = sw; el.height = sh;
+      el.style.width = sw + 'px'; el.style.height = sh + 'px';
+      el.dataset.clip = i;
+      host.append(el);
+    }
   }
+  // Release timing: when each image enters the viewport vs when it is released (data-fg="safe").
+  window.__timing = [];
+  const enter = new Map();
+  const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting && !enter.has(e.target)) enter.set(e.target, performance.now()); });
+  const mo = new MutationObserver((rs) => {
+    for (const r of rs) if (r.attributeName === 'data-fg' && r.target.dataset.fg === 'safe' && !r.target.__released) r.target.__released = performance.now();
+  });
+  for (const el of (host.querySelectorAll ? host.querySelectorAll('img') : [])) { io.observe(el); mo.observe(el, { attributes: true }); }
+  window.__releaseLatency = () => [...(host.querySelectorAll ? host.querySelectorAll('img') : [])].map((el) => {
+    const e = enter.get(el), r = el.__released;
+    return e === undefined ? null : r === undefined ? Infinity : Math.max(0, r - e);
+  });
   // Test hooks (main world): read state through attributes only.
   window.__state = (sel = 'video, img') => [...(host.querySelectorAll ? host.querySelectorAll(sel) : [])].map((e) => ({ clip: e.dataset.clip, fg: e.dataset.fg || null, filter: getComputedStyle(e).filter }));
   window.__play = () => Promise.all([...host.querySelectorAll('video')].map((v) => v.play()));
