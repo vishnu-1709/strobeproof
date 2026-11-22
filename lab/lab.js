@@ -14,7 +14,7 @@ const num = (x, d = 0) => Number(x).toLocaleString(undefined, { maximumFractionD
 function display() {
   const custom = $('size-custom').checked;
   const vw = Math.max(320, +$('vw').value || 1024);
-  if (!custom) return media ? { width: media.width, height: media.height, viewportWidth: vw } : { viewportWidth: vw };
+  if (!custom) return media ? { width: media.crop?.w ?? media.width, height: media.crop?.h ?? media.height, viewportWidth: vw } : { viewportWidth: vw };
   return { width: Math.max(16, +$('w').value || 640), height: Math.max(16, +$('h').value || 360), viewportWidth: vw };
 }
 
@@ -66,7 +66,10 @@ go.addEventListener('click', async () => {
   const buffer = await file.arrayBuffer();
   // Native size isn't known until decode; the worker fills in media width/height when width is absent.
   const d = $('size-custom').checked ? display() : { viewportWidth: display().viewportWidth };
-  getWorker().postMessage({ type: 'analyze', buffer, mime: file.type, name: file.name, display: d }, [buffer]);
+  const crop = $('crop-on').checked
+    ? { x: Math.max(0, +$('cx').value || 0), y: Math.max(0, +$('cy').value || 0), w: Math.max(8, +$('cw').value || 8), h: Math.max(8, +$('ch').value || 8) }
+    : undefined;
+  getWorker().postMessage({ type: 'analyze', buffer, mime: file.type, name: file.name, display: d, crop }, [buffer]);
 });
 
 let playbackFrames = null;
@@ -92,12 +95,17 @@ async function playbackAnalyze() {
   const g = canvas.getContext('2d', { willReadFrequently: true });
   const frames = [];
   let lastPresented = null, gaps = 0;
+  const crop = $('crop-on').checked
+    ? { x: Math.max(0, +$('cx').value || 0), y: Math.max(0, +$('cy').value || 0), w: Math.max(8, +$('cw').value || 8), h: Math.max(8, +$('ch').value || 8) }
+    : null;
   await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = () => rej(new Error('This browser cannot play this file.')); }).catch((e) => { fail(e.message); throw e; });
   const done = new Promise((res) => { v.onended = res; });
   const onFrame = (_now, meta) => {
     if (lastPresented !== null && meta.presentedFrames - lastPresented > 1) gaps += meta.presentedFrames - lastPresented - 1;
     lastPresented = meta.presentedFrames;
-    g.drawImage(v, 0, 0, SAMPLE_W, SAMPLE_H); // filters don't apply to drawImage: we read true pixels
+    // Filters don't apply to drawImage: we read true pixels.
+    if (crop) g.drawImage(v, crop.x, crop.y, crop.w, crop.h, 0, 0, SAMPLE_W, SAMPLE_H);
+    else g.drawImage(v, 0, 0, SAMPLE_W, SAMPLE_H);
     frames.push({ t: meta.mediaTime, tiles: tilesFromRGBA(g.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data, SAMPLE_W, SAMPLE_H) });
     if (!v.ended) v.requestVideoFrameCallback(onFrame);
   };
@@ -108,7 +116,7 @@ async function playbackAnalyze() {
   URL.revokeObjectURL(url);
   frames.sort((a, b) => a.t - b.t);
   media = { kind: 'video', type: file.type || 'video', width: v.videoWidth, height: v.videoHeight, frameCount: frames.length,
-    duration: v.duration, incomplete: gaps > 0, droppedFrames: gaps, method: 'playback (requestVideoFrameCallback)' };
+    duration: v.duration, incomplete: gaps > 0, droppedFrames: gaps, method: 'playback (requestVideoFrameCallback)', crop };
   playbackFrames = frames;
   mode = 'playback';
   reanalyze();
@@ -182,6 +190,7 @@ function drawStats(r) {
     ['Red flash', r.red.fail ? `Fails (peak ${r.red.maxTransitions} transitions/s)` : `Passes (peak ${r.red.maxTransitions} transitions/s)`],
     ['Largest flashing area', `${num(Math.max(r.general.maxAreaPx, r.red.maxAreaPx))} px² (limit ${num(AREA_LIMIT_PX)} px² at 1024-wide reference)`],
     ['Assumed display', `${num(d.displayWidth)}×${num(d.displayHeight)} CSS px on a ${num(d.viewportWidth)} px-wide screen`],
+    ...(media?.crop ? [['Region checked', `${media.crop.w}×${media.crop.h} px at (${media.crop.x}, ${media.crop.y})`]] : []),
   ];
   const dl = $('stats');
   dl.replaceChildren();

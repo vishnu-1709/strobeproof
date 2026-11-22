@@ -44,6 +44,17 @@
         <p class="hint">1024 is the WCAG reference screen.</p></div>
       </div>
     </fieldset>
+    <fieldset>
+      <legend>3. Only part of the frame? (screen recordings)</legend>
+      <div class="radio"><input type="checkbox" id="crop-on"><label for="crop-on">Check only a region of each frame</label></div>
+      <div class="row" id="crop-row">
+        <div><label for="cx">Left (px)</label><input type="number" id="cx" min="0" value="0" inputmode="numeric"></div>
+        <div><label for="cy">Top (px)</label><input type="number" id="cy" min="0" value="0" inputmode="numeric"></div>
+        <div><label for="cw">Width (px)</label><input type="number" id="cw" min="8" value="640" inputmode="numeric"></div>
+        <div><label for="ch">Height (px)</label><input type="number" id="ch" min="8" value="360" inputmode="numeric"></div>
+      </div>
+      <p class="hint">For the benchmark: crop a screen recording to where the test clip was shown. Measured in the recording's own pixels. With "At its own size", the region's size is used as the displayed size; set the screen width to the recording's width.</p>
+    </fieldset>
     <button id="go" disabled>Check it</button>
     <p class="status" id="status" role="status"></p>
     <figure id="player-box" hidden>

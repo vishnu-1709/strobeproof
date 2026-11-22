@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Strobeproof Benchmark</title>
-<meta name="description" content="How existing flash-blocking tools handle the Strobeproof known-answer cases.">
+<meta name="description" content="How flash-blocking tools handle the Strobeproof known-answer cases: did above-threshold flashing reach the screen?">
 <link rel="stylesheet" href="lab.css">
 </head>
 <body>
@@ -19,8 +19,62 @@
 </div></header>
 <main id="main" class="wrap">
   <h1>Benchmark</h1>
-  <p class="lede">Results are being recorded. The method and the full table will appear here.</p>
+  <p class="lede">For every failing case: did above-threshold flashing reach the screen? For every passing case: was the clip released after checking, or held calm? Results are for specific tool versions on a specific date, judged by this project's own analyser. The method is below so anyone can repeat it.</p>
+  <p class="status" id="status" role="status">Loading results…</p>
+
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="bench-cap">
+    <table>
+      <caption id="bench-cap" class="skip">Benchmark results by case and tool</caption>
+      <thead id="head"></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <h2>What the cells mean</h2>
+  <dl class="stats">
+    <dt>Blocked</dt><dd>No frame of above-threshold flashing was shown at normal brightness.</dd>
+    <dt>Reached</dt><dd>Some above-threshold flashing was shown at normal brightness.</dd>
+    <dt>Released after check</dt><dd>A passing clip was shown normally once checked (Strobeproof: after its 2-second check).</dd>
+    <dt>Held calm</dt><dd>A passing clip stayed dimmed. Safe, but more cautious than needed.</dd>
+    <dt>Not recorded</dt><dd>This tool hasn't been run on this case yet.</dd>
+  </dl>
+
+  <h2>Method</h2>
+  <ol>
+    <li>Clips: every suite case except 14 (variable frame rate can't be stored as a constant-rate file) and 15 (Strobeproof's own Calm Mode), encoded as constant-frame-rate MP4 by <code>tools/make-bench.mjs</code> straight from the synthetic frames. Each encoded clip is re-checked in the Lab and gives the locked answer (<code>e2e/bench-clips.spec.js</code>).</li>
+    <li><strong>Strobeproof</strong>: automated in headless Edge with the extension loaded. Each clip plays as a normal video at 160×90 px in a 160 px-wide window, which is exactly the 1024×576 reference display. Every presented frame records whether the clip was at normal brightness (<code>e2e/bench-self.spec.js</code>). No human watches; nothing is recorded.</li>
+    <li><strong>Other tools</strong>: one fresh browser profile per tool, its default settings, the same recorder page (<code>bench/index.html</code>), a 60 fps screen recording. The person recording lowers their brightness and looks away. Each recording is cropped to the clip region and checked in the Lab. A case counts as "reached" if the cropped recording fails WCAG 2.3.1 during that case's time slot.</li>
+  </ol>
+  <p class="hint">Known limit of the live path: at exactly 3 flashes per second (cases 3a–3d) Strobeproof can err on the safe side when the browser skips frames, because each change is seen up to a frame late. GIFs and pre-scanned videos are decoded frame by frame and are exact.</p>
 </main>
 <footer class="site"><div class="wrap">Strobeproof reduces exposure; it is not a medical device.</div></footer>
+<script type="module">
+  import { CASES } from '../core/fixtures.js';
+  const [bench, exp] = await Promise.all([
+    fetch('benchmark.json', { cache: 'no-store' }).then((r) => r.json()),
+    fetch('../core/__tests__/expected.json', { cache: 'no-store' }).then((r) => r.json()),
+  ]);
+  const ids = Object.keys(exp.cases).filter((id) => id !== '14' && id !== '15');
+  const head = document.getElementById('head'), rows = document.getElementById('rows');
+  const hr = document.createElement('tr');
+  for (const t of ['#', 'Case', 'Expected', ...bench.tools.map((t) => t.name + (t.version ? ` ${t.version}` : ''))]) { const th = document.createElement('th'); th.scope = 'col'; th.textContent = t; hr.append(th); }
+  head.append(hr);
+  const label = { blocked: 'Blocked', reached: 'Reached', 'released after check': 'Released after check', 'held calm': 'Held calm' };
+  for (const id of ids) {
+    const tr = document.createElement('tr');
+    const e = exp.cases[id];
+    for (const t of [id, CASES[id]?.name || '', e.verdict]) { const td = document.createElement('td'); td.textContent = t; tr.append(td); }
+    for (const tool of bench.tools) {
+      const td = document.createElement('td');
+      const v = tool.results?.[id];
+      td.textContent = v ? label[v] || v : 'Not recorded';
+      if (v === 'blocked') td.className = 'mark-ok'; else if (v === 'reached') td.className = 'mark-bad';
+      tr.append(td);
+    }
+    rows.append(tr);
+  }
+  const sp = bench.tools.find((t) => t.name === 'Strobeproof');
+  document.getElementById('status').textContent = sp?.date ? `Strobeproof row measured on ${sp.date}. ${bench.status}.` : bench.status;
+</script>
 </body>
 </html>

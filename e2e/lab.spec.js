@@ -65,3 +65,35 @@ test('WebM falls back to calm playback and still fails', async ({ page }) => {
   const text = await check(page, 'flash-5hz.webm');
   expect(text).toMatch(/Flashes too fast|Couldn't check every frame/);
 });
+
+test('benchmark page renders every bench case and is axe clean', async ({ page }) => {
+  await page.goto('/lab/benchmark.html');
+  await expect(page.locator('#rows tr')).toHaveCount(18);
+  await expect(page.locator('#status')).toContainText('Strobeproof row measured');
+  await axe(page);
+});
+
+test('bench recorder is gated: nothing plays until consent, large size is off', async ({ page }) => {
+  await page.goto('/bench/index.html');
+  await expect(page.getByRole('button', { name: 'Start' })).toBeDisabled();
+  await expect(page.locator('#s640')).toBeDisabled();
+  await expect(page.locator('#stage')).toBeHidden();
+  await axe(page);
+});
+
+test('crop mode (screen recordings): region size and screen width decide the area', async ({ page }) => {
+  const run = async (vw) => {
+    await page.goto('/lab/index.html');
+    await page.check('#crop-on');
+    await page.fill('#cx', '40'); await page.fill('#cy', '20'); await page.fill('#cw', '160'); await page.fill('#ch', '90');
+    await page.fill('#vw', String(vw));
+    await page.setInputFiles('#file', clip('flash-5hz.mp4'));
+    await page.click('#go');
+    const v = page.locator('#result-live .verdict');
+    await expect(v).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('#stats')).toContainText('160×90 px at (40, 20)');
+    return (await v.textContent()).trim();
+  };
+  expect(await run(1024)).toMatch(/^Safe to post/);     // 14,400 px² on a 1024-wide screen: below the limit
+  expect(await run(320)).toMatch(/Flashes too fast/);   // same region on a 320-wide screen: 147,456 px²
+});

@@ -1,0 +1,46 @@
+{
+  "_note": "Benchmark results. Strobeproof's row is written by e2e/bench-self.spec.js. Other rows are filled from the owner's screen recordings, analysed in the Lab with crop.",
+  "status": "Strobeproof row automated; other tools not yet recorded",
+  "date": null,
+  "setup": "Clips from tools/make-bench.mjs (suite cases, CFR MP4). Other tools: one fresh browser profile per tool, the same recorder page, screen-recorded at 60 fps, each recording cropped to the clip region and analysed in the Lab.",
+  "tools": [
+    {
+      "name": "Strobeproof",
+      "version": "1.0.0",
+      "how": "automated (headless Edge, extension loaded)",
+      "results": {
+        "1": "held calm",
+        "2": "blocked",
+        "4": "blocked",
+        "5": "released after check",
+        "6": "released after check",
+        "7": "released after check",
+        "8": "blocked",
+        "9": "blocked",
+        "10": "blocked",
+        "11": "blocked",
+        "13": "released after check",
+        "3a": "held calm",
+        "3b": "held calm",
+        "3c": "held calm",
+        "3d": "held calm",
+        "9b": "blocked",
+        "12a": "released after check",
+        "12b": "released after check"
+      },
+      "date": "2026-11-22"
+    },
+    {
+      "name": "NeuroShield",
+      "version": null,
+      "how": "screen recording",
+      "results": {}
+    },
+    {
+      "name": "PhotosensitivityPal",
+      "version": null,
+      "how": "screen recording",
+      "results": {}
+    }
+  ]
+}

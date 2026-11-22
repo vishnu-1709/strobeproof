@@ -10,7 +10,7 @@ const MIN_DELAY_US = 10_000, CLAMPED_DELAY_US = 100_000;
 /**
  * @param {ArrayBuffer|ReadableStream} data
  * @param {string} type  MIME type, e.g. 'image/gif', 'image/webp', 'image/png'
- * @param {{ maxFrames?: number }} [opts]
+ * @param {{ maxFrames?: number, crop?: {x:number,y:number,w:number,h:number} }} [opts]  crop: source-pixel region (screen recordings)
  */
 export async function decodeAnimatedImage(data, type, opts = {}) {
   if (typeof ImageDecoder === 'undefined') throw new Error('ImageDecoder not supported in this browser');
@@ -30,7 +30,8 @@ export async function decodeAnimatedImage(data, type, opts = {}) {
       const { image } = await dec.decode({ frameIndex: i, completeFramesOnly: true });
       if (!width) { width = image.displayWidth; height = image.displayHeight; }
       g.clearRect(0, 0, SAMPLE_W, SAMPLE_H);
-      g.drawImage(image, 0, 0, SAMPLE_W, SAMPLE_H);
+      if (opts.crop) g.drawImage(image, opts.crop.x, opts.crop.y, opts.crop.w, opts.crop.h, 0, 0, SAMPLE_W, SAMPLE_H);
+      else g.drawImage(image, 0, 0, SAMPLE_W, SAMPLE_H);
       const px = g.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data;
       one.push({ t: t / 1e6, tiles: tilesFromRGBA(px, SAMPLE_W, SAMPLE_H) });
       let d = image.duration ?? 0;

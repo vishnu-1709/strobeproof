@@ -22,3 +22,4 @@ spike/results.json
 
 # demo feed media: tiny synthetic clips, committed so the hosted demo works (Decision C10)
 !demo/media/*
+bench/clips/

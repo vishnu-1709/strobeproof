@@ -20,7 +20,7 @@ function codecDescription(file, trackId) {
 
 /**
  * @param {ArrayBuffer} buffer  the whole file
- * @param {{ maxDurationS?: number, onProgress?: (done:number, total:number)=>void }} [opts]
+ * @param {{ maxDurationS?: number, onProgress?: (done:number, total:number)=>void, crop?: {x:number,y:number,w:number,h:number} }} [opts]
  */
 export async function decodeMp4(buffer, opts = {}) {
   if (typeof VideoDecoder === 'undefined') throw new Error('WebCodecs VideoDecoder not supported in this browser');
@@ -57,7 +57,8 @@ export async function decodeMp4(buffer, opts = {}) {
     output(frame) {
       const t = frame.timestamp / 1e6;
       if (t <= maxT) {
-        g.drawImage(frame, 0, 0, SAMPLE_W, SAMPLE_H);
+        if (opts.crop) g.drawImage(frame, opts.crop.x, opts.crop.y, opts.crop.w, opts.crop.h, 0, 0, SAMPLE_W, SAMPLE_H);
+        else g.drawImage(frame, 0, 0, SAMPLE_W, SAMPLE_H);
         frames.push({ t, tiles: tilesFromRGBA(g.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data, SAMPLE_W, SAMPLE_H) });
       }
       frame.close();

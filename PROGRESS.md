@@ -11,11 +11,11 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | M1 | Spec lock | 15 min | done except expected.json lock (awaiting human) | ~20 min | – |
 | M2 | Core engine | 75 min | done, 39/39 tests | ~35 min | – |
 | M3 | Lab | 60 min | done, e2e 8/8, axe 0 (deploy waits on public repo) | ~35 min | m3-done |
-| M4 | Extension core | 70 min | in progress | – | – |
-| M5 | Pre-scan | 50 min | not started | – | – |
-| M6 | UX layer | 60 min | not started | – | – |
-| M7 | E2E + latency | 40 min | not started | – | – |
-| M8 | Benchmark support | 45 min | not started | – | – |
+| M4 | Extension core | 70 min | done, e2e 7/7 | ~30 min | m4-done |
+| M5 | Pre-scan | 50 min | done, e2e 9/9 (static WebP release max 0 ms) | ~20 min | m5-done |
+| M6 | UX layer | 60 min | done, e2e 10/10, axe 0 everywhere | ~30 min | m6-done |
+| M7 | E2E + latency | 40 min | done: Calm set 8–14 ms before the 4th transition is due on screen (10 runs) | ~15 min | m7-done |
+| M8 | Benchmark support | 45 min | done: all 9 failing cases blocked; recorder gated; competitor rows need the human | ~35 min | m8-done |
 | M9 | Ship | 35 min | not started | – | – |
 
 ## Decisions
@@ -41,6 +41,11 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | C6: chips | "Checking…" chip appears only if a check takes > 800 ms (no chip flash on fast checks). [Keep Calm] is first in tab order and styled primary, but focus is not moved automatically (no focus stealing). "Can't check" announcements throttled to one per 10 s per page. |
 | 2026-11-22 | C6: Lab area test | 320×180 at its own size is 57,600 px² > 21,824, so a full-frame 5 Hz clip correctly FAILS at native size; E2E covers both sides of the area limit. |
 | 2026-11-22 | C1: plan says "2 Hz → released" (M4 done-when), but PRETRIP_TRANS = 4 and a 2 Hz full-frame flash is exactly 4 transitions/s | Kept the constant (no C2 change). 2 Hz is held in Calm while it flashes (pre-trip margin, never confirmed risky); the release test uses a non-flashing clip. Flag for the human: raising PRETRIP_TRANS to 5 would release 2 Hz but shrink the latency slack from 3 to 2 transitions. |
+| 2026-11-22 | C6: popup labels | §3.6 "Strict (WCAG 2.3.1) / Comfort" → "Standard" / "Extra careful (not a medical standard)"; footer says "the web's flash-safety guideline" (CLAUDE.md: no WCAG in extension UI). |
+| 2026-11-22 | C10: demo feed media | Tiny synthetic demo clips (45 KB) committed in demo/media so the hosted demo works; the demo page keeps every flashing item dim by itself, so it is safe without the extension. |
+| 2026-11-22 | C1: live time base (revised) | Back to the plan: live detection uses media timestamps (accumulated across loops/seeks, ÷ playbackRate) instead of wall-clock, which removed jitter-induced false confirms. |
+| 2026-11-22 | C6: frame-skip pre-trip | Only ≥ 2 consecutive missed frames count as "uncertain" (headless Edge skips single frames constantly, which held every video calm). A single drop can't hide a whole flash state near the threshold. |
+| 2026-11-22 | C1: benchmark display size | Strobeproof's own row runs 160×90 clips in a 160 px-wide window = exactly the 1024×576 reference display (keeps the ≤ 160 px rule). Known: at exactly 3 Hz the live path errs on the safe side when frames are skipped; Lab and pre-scan are exact. |
 
 ## Open issues
 - Hackathon deadline and AI-use rule not yet provided.

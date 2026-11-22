@@ -197,6 +197,9 @@
       const canvas = new OffscreenCanvas(SAMPLE_W, SAMPLE_H);
       const g = canvas.getContext('2d', { willReadFrequently: true });
       let rectEvery = 0, firstT = null, lastTrip = null, lastPF = null;
+      // Time base: exact media timestamps (plan §3.3), accumulated so loops and seeks never run time backwards,
+      // and divided by playbackRate so 2× playback counts as twice the flash rate the viewer sees.
+      let lastMT = null, lastDt = 1 / 30, acc = 0;
       const make = () => {
         const r = v.getBoundingClientRect();
         c.analyzer = AN.createAnalyzer({ rect: { width: r.width || 1, height: r.height || 1 }, viewportWidth: innerWidth, ...thresholds() });
@@ -208,8 +211,11 @@
         if (!c.live) return;
         if (c.state === 'allow' || c.state === 'risky' || c.state === 'hide' || c.state === 'cant') { c.live = false; return; }
         if (!c.analyzer) make();
-        // Wall-clock presentation time: what the viewer actually sees (handles loops and playbackRate).
-        const t = (meta.expectedDisplayTime || now) / 1000;
+        let dt = lastMT === null ? 0 : meta.mediaTime - lastMT;
+        lastMT = meta.mediaTime;
+        if (dt < 0 || dt > 1) dt = lastDt; else if (dt > 0) lastDt = dt; // loop / seek: continue smoothly
+        acc += dt / (v.playbackRate || 1);
+        const t = acc;
         let px;
         try {
           g.drawImage(v, 0, 0, SAMPLE_W, SAMPLE_H); // CSS filters don't affect drawImage: true pixels
@@ -219,7 +225,10 @@
           return setState(c, 'cant', { reason: e?.name === 'SecurityError' ? 'cross-origin' : 'unreadable' });
         }
         if (++rectEvery % 15 === 0) { const r = v.getBoundingClientRect(); c.analyzer.setRect({ width: r.width || 1, height: r.height || 1 }, innerWidth); }
-        const uncertain = lastPF !== null && meta.presentedFrames - lastPF > 1;
+        // ≥ 2 consecutive frames never reached us → we may have missed a flash: pre-trip to Calm (plan §3.3).
+        // A single dropped frame can't hide a whole flash state near the threshold (≥ 4 frames per state at 30 fps
+        // up to 3.5 Hz), and much faster flicker still shows far more than 7 transitions with one frame missing.
+        const uncertain = lastPF !== null && meta.presentedFrames - lastPF > 2;
         lastPF = meta.presentedFrames;
         const s = c.analyzer.push(LUM.tilesFromRGBA(px, SAMPLE_W, SAMPLE_H), t);
         if (firstT === null) firstT = t;

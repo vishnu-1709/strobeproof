@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strobeproof Benchmark Recorder</title>
+<link rel="stylesheet" href="../lab/lab.css">
+<style>
+  #stage { position: fixed; left: 24px; top: 150px; background: #000; display: none; }
+  #stage video { display: block; width: 100%; height: 100%; }
+  #label { position: fixed; left: 24px; top: 110px; font: 600 18px system-ui, sans-serif; background: var(--surface); color: var(--text); padding: 6px 10px; border-radius: 6px; display: none; }
+  body.running main, body.running header, body.running footer { visibility: hidden; }
+  body.running #label, body.running #stop { visibility: visible; }
+  #stop { position: fixed; right: 24px; top: 24px; display: none; }
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="brand" href="../lab/index.html">Strobeproof Lab</a></div></header>
+<main id="main" class="wrap">
+  <h1>Benchmark recorder</h1>
+  <div class="verdict fail" role="note">
+    <h2>This page shows real flashing</h2>
+    <p>It plays the test-suite clips <strong>without any protection</strong>, so other tools can be tested. Don't use it if you or anyone nearby is photosensitive. Before you press Start: lower your screen brightness, start your screen recording, then look away until it says "Done". Press <kbd>Esc</kbd> to stop at any time.</p>
+  </div>
+
+  <section class="card" aria-labelledby="setup-h">
+    <h2 id="setup-h" style="margin-top:0">Setup</h2>
+    <div class="radio"><input type="checkbox" id="ok"><label for="ok">I'm not photosensitive, I've lowered my brightness, and I'll look away while it plays.</label></div>
+    <fieldset>
+      <legend>Clip size on screen</legend>
+      <div class="radio"><input type="radio" name="size" id="s160" value="160" checked><label for="s160">160 × 90 px (small)</label></div>
+      <div class="radio"><input type="radio" name="size" id="s640" value="640" disabled><label for="s640">640 × 360 px (needed to test other tools)</label></div>
+      <p class="hint" id="large-hint">The large size is switched off until the project owner approves it.</p>
+    </fieldset>
+    <p>The clip always appears at <strong>left 24 px, top 150 px</strong> of this page. Use that region (times your display scaling) as the crop in the Lab.</p>
+    <button id="start" disabled>Start</button>
+  </section>
+
+  <h2>Schedule (seconds after pressing Start)</h2>
+  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="sched-cap">
+    <table><caption id="sched-cap" class="skip">When each case plays</caption>
+      <thead><tr><th scope="col">Case</th><th scope="col">Plays from</th><th scope="col">to</th></tr></thead>
+      <tbody id="sched"></tbody></table>
+  </div>
+</main>
+<p id="label" aria-live="off"></p>
+<div id="stage"><video id="v" muted playsinline preload="auto"></video></div>
+<button id="stop">Stop (Esc)</button>
+<footer class="site"><div class="wrap">Method: <a href="../lab/benchmark.html">Benchmark</a>.</div></footer>
+<script type="module">
+  const GAP = 2, CLIP = 3, TAIL = 1, SLOT = GAP + CLIP + TAIL;
+  const cases = await (await fetch('clips/cases.json')).json().catch(() => []);
+  const sched = document.getElementById('sched');
+  cases.forEach((c, i) => {
+    const tr = document.createElement('tr');
+    for (const t of [`#${c.id} ${c.name}`, String(i * SLOT + GAP), String(i * SLOT + GAP + CLIP)]) { const td = document.createElement('td'); td.textContent = t; tr.append(td); }
+    sched.append(tr);
+  });
+  const q = new URLSearchParams(location.search);
+  if (q.get('allowLarge') === '1') { document.getElementById('s640').disabled = false; document.getElementById('large-hint').hidden = true; }
+  const ok = document.getElementById('ok'), start = document.getElementById('start');
+  ok.onchange = () => { start.disabled = !ok.checked || !cases.length; };
+  let stopped = false;
+  const stage = document.getElementById('stage'), label = document.getElementById('label'), v = document.getElementById('v'), stop = document.getElementById('stop');
+  function halt() { stopped = true; v.pause(); v.removeAttribute('src'); v.load(); stage.style.display = 'none'; label.style.display = 'none'; stop.style.display = 'none'; document.body.classList.remove('running'); }
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') halt(); });
+  stop.onclick = halt;
+  const wait = (s) => new Promise((r) => setTimeout(r, s * 1000));
+  start.onclick = async () => {
+    stopped = false;
+    const w = +document.querySelector('input[name=size]:checked').value, h = Math.round(w * 9 / 16);
+    Object.assign(stage.style, { width: w + 'px', height: h + 'px', display: 'block' });
+    label.style.display = 'block'; stop.style.display = 'block';
+    document.body.classList.add('running');
+    for (const c of cases) {
+      if (stopped) return;
+      label.textContent = `Case ${c.id}`;
+      v.src = `clips/case-${c.id}.mp4`;
+      await wait(GAP); if (stopped) return;
+      await v.play().catch(() => {});
+      await wait(CLIP); v.pause(); v.removeAttribute('src'); v.load();
+      await wait(TAIL);
+    }
+    halt();
+    label.style.display = 'block'; label.textContent = 'Done. You can look back now.';
+  };
+</script>
+</body>
+</html>

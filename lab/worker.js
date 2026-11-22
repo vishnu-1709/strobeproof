@@ -14,8 +14,8 @@ function isMp4(bytes) {
 function run(display) {
   const { frames, media } = cache;
   const d = {
-    displayWidth: display?.width ?? media.width,
-    displayHeight: display?.height ?? media.height,
+    displayWidth: display?.width ?? media.crop?.w ?? media.width,
+    displayHeight: display?.height ?? media.crop?.h ?? media.height,
     viewportWidth: display?.viewportWidth ?? 1024,
     incomplete: media.incomplete,
   };
@@ -34,20 +34,22 @@ self.onmessage = async (e) => {
     let media;
     if (imgType) {
       self.postMessage({ type: 'progress', text: 'Reading every frame of the image…' });
-      const r = await decodeAnimatedImage(m.buffer, imgType);
+      const r = await decodeAnimatedImage(m.buffer, imgType, { crop: m.crop });
       media = { kind: 'image', type: imgType, width: r.width, height: r.height, frameCount: r.frameCount,
         duration: r.loopDuration, animated: r.animated, incomplete: r.incomplete, loops: r.frames.length / Math.max(1, r.frameCount) };
+      media.crop = m.crop || null;
       cache = { frames: r.frames, media };
     } else if (isMp4(bytes)) {
       self.postMessage({ type: 'progress', text: 'Reading every frame of the video…' });
       let last = 0;
       const r = await decodeMp4(m.buffer, {
+        crop: m.crop,
         onProgress: (done, total) => {
           if (done - last >= 60 || done === total) { last = done; self.postMessage({ type: 'progress', text: `Read ${done} of ${total} frames…` }); }
         },
       });
       media = { kind: 'video', type: 'video/mp4', codec: r.codec, width: r.width, height: r.height,
-        frameCount: r.frameCount, expectedFrames: r.expectedFrames, duration: r.duration, incomplete: r.incomplete, error: r.error };
+        frameCount: r.frameCount, expectedFrames: r.expectedFrames, duration: r.duration, incomplete: r.incomplete, error: r.error, crop: m.crop || null };
       cache = { frames: r.frames, media };
     } else {
       self.postMessage({ type: 'needs-playback' });
