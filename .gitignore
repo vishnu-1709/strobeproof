@@ -1,9 +1,0 @@
-﻿node_modules/
-.env
-*.log
-clips/
-*.failing.mp4
-*.failing.webm
-coverage/
-dist/
-
