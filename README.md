@@ -123,7 +123,7 @@ Sources: [Strobeproof](https://github.com/vishnu-1709/strobeproof) · [NeuroShie
 ## Limitations
 
 - Not covered: `<canvas>`/WebGL games, CSS/JS animations of page elements, CSS background GIFs, animated PNGs whose URL doesn't look animated, spatial pattern (stripe) hazards.
-- Live video: a short, measured switch latency after the 4th transition (above). At exactly 3 flashes per second the live path can err on the safe side when the browser skips frames. GIFs and pre-scanned videos are decoded frame by frame and are exact.
+- Live video: a short, measured switch latency after the 5th transition (above). At exactly 3 flashes per second the live path can err on the safe side when the browser skips frames. GIFs and pre-scanned videos are decoded frame by frame and are exact.
 - Unreadable and DRM video can't be analysed. It runs in Calm Mode unless the user opts out.
 - Media inside shadow roots is calmed when the script finds it (within milliseconds), not by the `document_start` stylesheet.
 - HDR content on HDR displays can exceed Calm Mode's bound.

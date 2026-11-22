@@ -5,13 +5,13 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 ## The split
 
 **The project owner (me)**
-- Chose the idea and the approach. A verifiable flash detector: known-answer suite, benchmark, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan.
+- Chose the idea and the approach. A verifiable flash detector: known-answer suite, benchmark, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan with Claude's help.
 - Researched the existing tools and the WCAG 2.3.1 flash rules before the build. (The comparison table itself was compiled by Claude Code from the store listings; see below.)
 - Made every spec and design decision (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition definition, the pre-trip design, the change from 4 to 5 transitions, Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - Wrote and approved the test answers (`core/__tests__/expected.json`, plan §4.5), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red rule.
 - Reviewed and approved `core/flashCounter.js` and `core/areaGrid.js`.
 - Ran the real-browser checks: the release check in Chrome and testing on YouTube. The manual spike on Reddit/X was not done. Designed the benchmark (cases, method, what counts as blocked) and decided to compare other tools by their public store listings instead of screen recordings.
-- Made the video.
+- Recorded the video's screen demos and narration (slides, captions and editing made with Claude).
 
 **Claude Code (AI assistant): the implementation**
 - `core/flashCounter.js` and `core/areaGrid.js`: AI-drafted by Claude Code from my §4.3/§4.4 pseudocode; reviewed and approved by me.
@@ -25,12 +25,15 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 - Scaffolding.
 - Drafts of README.md and DEVPOST.md.
 
+**Other AI help**
+- I also used Claude (claude.ai) for research on existing tools and the WCAG rules, to help write the build plan, and to make the video's animated slides, captions and final edit. I recorded the screen demos and the narration myself.
+
 ## Per commit
 
 | Commit | Claude Code wrote | Human wrote / decided |
 |---|---|---|
 | `211a5ae` chore: clear repo | Removal commit | Decided to reset the repo and start fresh |
-| scaffold | `CLAUDE.md` (assembled verbatim from plan §7.1 + master prompt §2), `PROGRESS.md`, `AI_LOG.md`, `.gitignore` | Wrote the build plan and master prompt (copied into the repo unchanged) |
+| scaffold | `CLAUDE.md` (assembled verbatim from plan §7.1 + master prompt §2), `PROGRESS.md`, `AI_LOG.md`, `.gitignore` | Wrote the build plan (with Claude's help) and master prompt (copied into the repo unchanged) |
 | `7f1489a` M0 spike kit | Spike extension, Playwright runner | Defined the five spike questions (plan) |
 | `e688a24` core groundwork | constants.js transcribed from plan §4.1, fixtures, luminance, analyzer, decoders, tests | Constants and test cases specified in the plan |
 | `1002278` flashCounter + areaGrid | Both files, AI-drafted from the owner's §4.3/§4.4 pseudocode (the versions in use today) | Reviewed and approved both; reviewed expected.json and added case 9b plus the case-9 general assertion; chose linear RGB for the red rule |
@@ -48,3 +51,4 @@ Strobeproof was built with AI assistance (Claude Code). "Me" below means the pro
 | stub, then restore | Briefly replaced both files with stubs, then restored the AI drafts from `490f4a9` unchanged and relabelled them | Decided to keep the AI-drafted versions, reviewed and approved, and credit them as such |
 | comparison | Read the five store listings, wrote lab/comparison.json and the tables (benchmark page, README, Devpost) | Chose listing-based comparison over competitor recordings; chose the tools |
 | How I built this | Pasted the section into DEVPOST.md and aligned this file with it | Wrote the "How I built this" text; confirmed which real-browser checks were done |
+| sources + other AI help | Added the source links and AI-help wording to DEVPOST.md and this file | Found the sources for "The problem"; wrote the "Other AI help" text |

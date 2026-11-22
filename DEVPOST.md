@@ -1,16 +1,14 @@
 # Strobeproof: Devpost draft
 
-> ⚠ = must be sourced from a primary source (or removed) before submitting. Plan §1.3, §11.
-
 ## 1. What it does
 Every flash blocker says it follows WCAG. Strobeproof is the one that proves it: an open known-answer test suite, a benchmark of existing tools, and a browser shield whose Calm Mode stays below the WCAG flash threshold by construction, even on video it can't read.
 
 **Try it:** Lab (no install): https://vishnu-1709.github.io/strobeproof/lab/ · Demo feed: https://vishnu-1709.github.io/strobeproof/demo/ · Extension ZIP: see README.
 
 ## 2. The problem
-- People with photosensitive epilepsy have been deliberately attacked with strobing GIFs. In 2016 a strobing GIF sent to journalist Kurt Eichenwald caused a seizure and the sender was criminally charged. ⚠ (seizure details)
-- In Nov 2019 and May 2020, followers of the Epilepsy Foundation and the Epilepsy Society were sent strobing GIFs. ⚠ (dates and outcomes from primary sources: TIME, Epilepsy Society)
-- Photosensitive epilepsy affects about 1 in 4,000 people, 3–5% of people with epilepsy (Epilepsy Society, https://www.epilepsy.org.uk/?p=1833).
+- People with photosensitive epilepsy have been deliberately attacked with strobing GIFs. In Dec 2016 a strobing GIF sent to journalist Kurt Eichenwald caused a seizure, and the sender was criminally charged ([CBS News](https://www.cbsnews.com/news/john-rayne-rivello-tweet-gif-deadly-weapon-seizure-inducing-tweet-kurt-eichenwald-hate-crime/)).
+- In Nov 2019, more than 30 accounts posted strobing images using the Epilepsy Foundation's handle and hashtags ([Engadget](https://www.engadget.com/2019-12-18-twitter-epilepsy-foundation-attacked.html)).
+- Photosensitive epilepsy affects about 1 in 4,000 people, 3–5% of people with epilepsy ([Epilepsy Action](https://www.epilepsy.org.uk/?p=1833)).
 
 ## 3. Prior art and how Strobeproof compares
 <!-- comparison:start -->
@@ -37,8 +35,6 @@ Sources: [Strobeproof](https://github.com/vishnu-1709/strobeproof) · [NeuroShie
 
 [PhotosensitivityPal](https://chromewebstore.google.com/detail/photosensitivitypal/jfbeiilmcgaofgkhkbdepkafoikbmklh): listing unavailable on 22 Nov 2026.
 <!-- comparison:end -->
-
-Also related, not re-checked against their listings today ⚠: CalmWeb (Firefox), Photosensitivity Video Blocker (Chrome), Flikcer (2021 research prototype), EPI-LENS (open-source analysis tool), PEAT (Trace Center desktop analyser for developers).
 
 ## 4. What's new
 1. **Verified**: 20 locked known-answer cases (ramps from rest, falling ramps above 0.80, exact 3 Hz vs 3.5 Hz boundaries, small vs large area, red-only flashes, dropped frames), run live in the browser, plus a published benchmark method.
@@ -71,13 +67,13 @@ See the README Limitations section (canvas, CSS animation, CSS backgrounds, stri
 Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding assistant). In line with the EvoHacks 2.0 rule ("AI is accepted but you should not use it to create the whole project"), here is the split. The full per-commit record is in [AI_LOG.md](AI_LOG.md), which matches this section.
 
 **What I did**
-- **Chose the idea and the approach.** A flash detector you can verify: a known-answer suite, a benchmark of existing tools, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan.
+- **Chose the idea and the approach.** A flash detector you can verify: a known-answer suite, a benchmark of existing tools, and Calm Mode by default, with an honest "can't check" state. I wrote the build plan with Claude's help.
 - **Researched the existing tools and the WCAG 2.3.1 flash rules** before the build. (Claude Code compiled the comparison table from the store listings.)
 - **Made every spec and design decision** (PROGRESS.md › Decisions). Where Claude Code proposed options, I chose or approved them. That covers the WCAG 2.3.1 reading behind the constants, the transition rule, the pre-trip design (including moving it from 4 to 5 transitions), Calm Mode and its 0.32 → 0.084 maths, the red rule using linear RGB, and the UX rules.
 - **Wrote and approved the test answers** (`expected.json`), including the case 9/9b fix: case 9 also asserts a general flash, and 9b isolates the red-only rule.
 - **Ran the real-browser checks**: the release check in Chrome and testing on YouTube. The manual spike on Reddit/X was not done, so the GIF-video pre-scan hasn't been confirmed on those sites.
 - **Designed the benchmark**: the cases, the method, what counts as blocked. I chose to compare other tools by their public store listings instead of screen-recording them.
-- **Made the video.**
+- **Recorded the video's screen demos and narration** (slides, captions and editing made with Claude).
 
 **What Claude Code did: the implementation**
 - The detection engine, including `core/flashCounter.js` and `core/areaGrid.js`. These two were AI-drafted by Claude Code from my pseudocode, then reviewed and approved by me.
@@ -89,6 +85,9 @@ Strobeproof was built with the help of **Claude Code** (Anthropic's AI coding as
 - Running the benchmark (the automated Strobeproof row) and compiling the comparison table from public store listings.
 - The build and clip scripts, and scaffolding.
 - Drafts of the README and this page.
+
+**Other AI help**
+- I also used Claude (claude.ai) for research on existing tools and the WCAG rules, to help write the build plan, and to make the video's animated slides, captions and final edit. I recorded the screen demos and the narration myself.
 
 Commits don't carry AI co-author trailers; AI use is disclosed here and in AI_LOG.md instead.
 
