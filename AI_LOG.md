@@ -16,3 +16,4 @@ What Claude Code wrote vs what the human wrote or decided, per commit. This goes
 | `384364c` UX layer | popup, welcome, chip.css, demo feed, UX E2E | Plan §3.4–§3.6 UX spec |
 | `34f39e7` latency | latency E2E + clip | Pre-trip design (plan A17) |
 | M8 benchmark | make-bench, recorder page, benchmark page, bench E2E, crop mode | Benchmark method (plan §6); competitor recordings pending |
+| M9 ship | README, DEVPOST.md draft, release.mjs (zip writer), review fixes (chip Tab order, VideoDecoder leak) | Approved the expected.json lock, go-public, gated large bench size |

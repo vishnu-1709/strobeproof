@@ -431,16 +431,25 @@
       if (over.length) backToSafe(over[over.length - 1]);
     }, true);
 
+    // The chip lives right after its media in the DOM, so keyboard users reach it next to the media in Tab order
+    // (not at the end of a long feed). Outside links/pictures/labels to avoid nested interactive content.
+    // Inside the fullscreen element too, when the media is in a fullscreen container (plan A14).
     function placeChip(c) {
-      const fs = document.fullscreenElement;
-      const parent = fs && fs !== c.el && fs.contains(c.el) ? fs : (document.body || document.documentElement);
-      if (c.chipHost.parentNode !== parent) parent.append(c.chipHost);
+      const anchor = c.el.closest?.('a, button, picture, label, summary') || c.el;
+      if (anchor.nextSibling !== c.chipHost) anchor.after(c.chipHost);
     }
     function positionChip(c) {
       if (!c.chipHost) return;
       const r = c.el.getBoundingClientRect();
       const visible = r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight;
-      c.chipHost.style.cssText = `all:initial;position:fixed;z-index:2147483646;left:${Math.max(4, r.left + 8)}px;top:${Math.max(4, r.top + 8)}px;display:${visible ? 'block' : 'none'};`;
+      const want = { left: Math.max(4, r.left + 8), top: Math.max(4, r.top + 8) };
+      const css = (l, t) => `all:initial;position:fixed;z-index:2147483646;left:${l}px;top:${t}px;display:${visible ? 'block' : 'none'};`;
+      c.chipHost.style.cssText = css(want.left, want.top);
+      if (!visible) return;
+      // A transformed/filtered ancestor makes position:fixed relative to it: correct by the measured offset.
+      const got = c.chipHost.getBoundingClientRect();
+      const dx = want.left - got.left, dy = want.top - got.top;
+      if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) c.chipHost.style.cssText = css(want.left + dx, want.top + dy);
     }
     let posQueued = false;
     const reposition = () => {
@@ -455,7 +464,7 @@
       }
     });
     document.addEventListener('fullscreenchange', () => {
-      for (const c of items.values()) if (c.chipHost) { placeChip(c); positionChip(c); }
+      for (const c of items.values()) if (c.chipHost) positionChip(c);
       dispatchEvent(new Event('resize'));
     });
 

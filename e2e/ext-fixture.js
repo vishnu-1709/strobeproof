@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const ext = path.resolve('extension');
+const ext = path.resolve(process.env.SP_EXT || 'extension'); // SP_EXT: test an unzipped release instead
 
 export const test = base.extend({
   context: async ({}, use) => {

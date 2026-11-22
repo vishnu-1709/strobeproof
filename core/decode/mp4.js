@@ -64,32 +64,38 @@ export async function decodeMp4(buffer, opts = {}) {
       frame.close();
       opts.onProgress?.(frames.length, total);
     },
-    error(e) { decodeError = e; },
+    error(e) { decodeError = e; for (const wake of waiters.splice(0)) wake(); },
   });
-  const config = {
-    codec: track.codec.startsWith('vp08') ? 'vp8' : track.codec,
-    codedWidth: track.video.width,
-    codedHeight: track.video.height,
-    description: codecDescription(file, track.id),
-  };
-  const support = await VideoDecoder.isConfigSupported(config);
-  if (!support.supported) { decoder.close(); throw new Error(`codec ${track.codec} not supported`); }
-  decoder.configure(config);
+  const waiters = []; // back-pressure waits, woken on dequeue OR on error (an errored decoder never dequeues)
+  try {
+    const config = {
+      codec: track.codec.startsWith('vp08') ? 'vp8' : track.codec,
+      codedWidth: track.video.width,
+      codedHeight: track.video.height,
+      description: codecDescription(file, track.id),
+    };
+    const support = await VideoDecoder.isConfigSupported(config);
+    if (!support.supported) throw new Error(`codec ${track.codec} not supported`);
+    decoder.configure(config);
 
-  total = samples.length;
-  for (const s of samples) {
-    if (decodeError) break;
-    decoder.decode(new EncodedVideoChunk({
-      type: s.is_sync ? 'key' : 'delta',
-      timestamp: (1e6 * s.cts) / s.timescale,
-      duration: (1e6 * s.duration) / s.timescale,
-      data: s.data,
-    }));
-    // Back-pressure so huge files don't queue everything at once.
-    if (decoder.decodeQueueSize > 30) await new Promise((r) => decoder.addEventListener('dequeue', r, { once: true }));
+    total = samples.length;
+    for (const s of samples) {
+      if (decodeError) break;
+      decoder.decode(new EncodedVideoChunk({
+        type: s.is_sync ? 'key' : 'delta',
+        timestamp: (1e6 * s.cts) / s.timescale,
+        duration: (1e6 * s.duration) / s.timescale,
+        data: s.data,
+      }));
+      // Back-pressure so huge files don't queue everything at once.
+      if (decoder.decodeQueueSize > 30) {
+        await new Promise((r) => { waiters.push(r); decoder.addEventListener('dequeue', r, { once: true }); });
+      }
+    }
+    if (!decodeError) await decoder.flush().catch((e) => { decodeError = e; });
+  } finally {
+    if (decoder.state !== 'closed') decoder.close(); // never leak a decoder, even when a chunk throws
   }
-  if (!decodeError) await decoder.flush().catch((e) => { decodeError = e; });
-  decoder.close();
   frames.sort((a, b) => a.t - b.t);
   const t0 = frames.length ? frames[0].t : 0;
   for (const f of frames) f.t -= t0;

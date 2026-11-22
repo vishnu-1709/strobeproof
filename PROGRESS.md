@@ -7,16 +7,16 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 
 | M | Name | Estimate | Status | Time used | Tag |
 |---|---|---|---|---|---|
-| M0 | Spike kit | 50 min | done (auto); manual Reddit/X run pending | ~45 min | – |
-| M1 | Spec lock | 15 min | done except expected.json lock (awaiting human) | ~20 min | – |
-| M2 | Core engine | 75 min | done, 39/39 tests | ~35 min | – |
+| M0 | Spike kit | 50 min | done (auto); manual Reddit/X run pending (flag GIF_VIDEO_PRESCAN = true meanwhile) | ~45 min | – |
+| M1 | Spec lock | 15 min | done, expected.json locked 2026-11-22 | ~20 min | m1-done |
+| M2 | Core engine | 75 min | done | ~35 min | m2-done |
 | M3 | Lab | 60 min | done, e2e 8/8, axe 0 (deploy waits on public repo) | ~35 min | m3-done |
 | M4 | Extension core | 70 min | done, e2e 7/7 | ~30 min | m4-done |
 | M5 | Pre-scan | 50 min | done, e2e 9/9 (static WebP release max 0 ms) | ~20 min | m5-done |
 | M6 | UX layer | 60 min | done, e2e 10/10, axe 0 everywhere | ~30 min | m6-done |
 | M7 | E2E + latency | 40 min | done: Calm set 8–14 ms before the 4th transition is due on screen (10 runs) | ~15 min | m7-done |
 | M8 | Benchmark support | 45 min | done: all 9 failing cases blocked; recorder gated; competitor rows need the human | ~35 min | m8-done |
-| M9 | Ship | 35 min | not started | – | – |
+| M9 | Ship | 35 min | done except: public repo + Pages, v1.0 tag (both need the human) | ~30 min | – |
 
 ## Decisions
 
@@ -46,9 +46,23 @@ Repo: https://github.com/vishnu-1709/strobeproof (private)
 | 2026-11-22 | C1: live time base (revised) | Back to the plan: live detection uses media timestamps (accumulated across loops/seeks, ÷ playbackRate) instead of wall-clock, which removed jitter-induced false confirms. |
 | 2026-11-22 | C6: frame-skip pre-trip | Only ≥ 2 consecutive missed frames count as "uncertain" (headless Edge skips single frames constantly, which held every video calm). A single drop can't hide a whole flash state near the threshold. |
 | 2026-11-22 | C1: benchmark display size | Strobeproof's own row runs 160×90 clips in a 160 px-wide window = exactly the 1024×576 reference display (keeps the ≤ 160 px rule). Known: at exactly 3 Hz the live path errs on the safe side when frames are skipped; Lab and pre-scan are exact. |
+| 2026-11-22 | C2: expected.json lock | Approved and locked by the human. |
+| 2026-11-22 | C8: make public + Pages | Approved by the human, then held by Claude: commit history contains two personal email addresses that would become public. Asked how to proceed. |
+| 2026-11-22 | C9: large bench clips | Keep the 640 px size behind ?allowLarge=1; the human opens it when recording. |
+| 2026-11-22 | Review fix (C6) | Chips moved next to their media in the DOM so they follow it in Tab order (was: end of body). Transformed ancestors corrected for. |
 
 ## Open issues
+- Public repo + GitHub Pages: waiting on the email-in-history decision.
 - Hackathon deadline and AI-use rule not yet provided.
-- C4 open: Reddit/X GIF-video fetchability + Reddit shadow DOM need the human's real-Chrome run (SPIKE.md). GIF-video pre-scan is built behind that answer.
-- expected.json lock pending human approval.
-- Plan says "14 known-answer tests" in §1.2/§1.1 but §4.5 lists 15 (incl. Calm Mode #15). Treating it as 15.
+- C4: Reddit/X GIF-video fetchability + Reddit shadow DOM need the human's real-Chrome spike run (SPIKE.md).
+- Human-only: NVDA/VoiceOver, 200% zoom, forced colours, hallway test; competitor benchmark recordings; install GIF (docs/install.gif); demo video; Devpost ⚠ facts.
+
+## Pre-submit checklist (plan §11)
+- [ ] Final check that "Strobeproof" is still unused on Devpost / Web Store / GitHub
+- [ ] Every ⚠ fact sourced or removed (DEVPOST.md)
+- [x] CALM_BRIGHTNESS set from the spike measurement; test #15 green
+- [ ] Lab URL works in incognito; suite page all green (needs public Pages)
+- [x] Release ZIP installs on a clean profile (27/27 extension E2E on the unzipped ZIP)
+- [x] Pre-trip latency number and benchmark method in README
+- [ ] Video ≤ 3:00, warning card first, no unmasked flashing, own-code segment
+- [x] Wording says "reduces exposure" everywhere, never "prevents seizures"

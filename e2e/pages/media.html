@@ -28,6 +28,14 @@
     host = fp.attachShadow({ mode: 'closed' });
   }
   if (opts.has('far')) { const s = document.createElement('div'); s.className = 'spacer'; root.append(s); }
+  if (opts.has('links')) {
+    // 20 links before and after the media: chips must be reachable right after the media, not at the end.
+    for (const [where, id] of [['before', 'before'], ['after', 'after']]) {
+      const nav = document.createElement('nav'); nav.setAttribute('aria-label', id);
+      for (let i = 0; i < 20; i++) { const a = document.createElement('a'); a.href = '#'; a.id = `${id}-${i}`; a.textContent = `${id} link ${i}`; nav.append(a, ' '); }
+      if (where === 'before') root.before(nav); else root.after(nav);
+    }
+  }
   for (const v of (q.get('v') || '').split(',').filter(Boolean)) {
     const el = document.createElement('video');
     el.src = base + v; el.width = 160; el.height = 90; el.playsInline = true; el.preload = 'auto';

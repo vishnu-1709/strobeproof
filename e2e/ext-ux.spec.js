@@ -134,3 +134,12 @@ test('demo feed: every post reports a state; page is axe clean', async ({ page }
   for (const f of flashing) expect(f).toMatch(/brightness\(0\.32\)|brightness\(0\)/);
   await axe(page, '#main');
 });
+
+test('chip is next to its media in Tab order (not at the end of the page)', async ({ page }) => {
+  await page.goto(P('img=flash-5hz.gif&opts=links'));
+  await expect.poll(() => fg(page), { timeout: 10_000 }).toBe('risky');
+  await page.focus('#before-19');
+  await page.keyboard.press('Tab');
+  const t = await page.evaluate(() => { const a = document.activeElement; return a?.tagName === 'STROBEPROOF-CHIP' ? a.shadowRoot.activeElement?.textContent : a?.id; });
+  expect(t).toBe('Keep Calm');
+});
